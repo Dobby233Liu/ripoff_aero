@@ -47,7 +47,21 @@ function UIBox:draw()
     local whitened = Utils.lerp({1, 1, 1}, {r, g, b}, self.contrast)
     Draw.setColor(whitened, a*self.frostness)
     love.graphics.rectangle("fill", -off_outer_c, -off_outer_c, self.width+off_outer_c*2, self.height+off_outer_c*2)
-    Draw.setColor(whitened, a)
+
+    if self.glass_pane then
+        local glass_realw, glass_realh = self.glass_pane:getDimensions()
+        glass_realw = glass_realw * 2
+        glass_realh = glass_realh * 2
+        local glass_w, glass_h = self.width+off_outer_c*2, self.height+off_outer_c*2
+        -- glass_w, glass_h = SCREEN_WIDTH, SCREEN_HEIGHT
+        self.glass_pane_quad:setViewport(self.x-off_outer_c, self.y-off_outer_c, glass_w, glass_h, glass_realw, glass_realh)
+        Draw.setColor(1,1,1,a)
+        love.graphics.setBlendMode("add")
+        Draw.draw(self.glass_pane, self.glass_pane_quad, self.width/2, self.height/2, 0, 1, 1, glass_w/2, glass_h/2)
+        love.graphics.setBlendMode("alpha")
+    end
+
+    Draw.setColor(1, 1, 1, a)
 
     Draw.draw(self.left[math.floor(self.left_frame)], 0, 0, 0, 2, self.height / left_height, left_width, 0)
     Draw.draw(self.left[math.floor(self.left_frame)], self.width, 0, 0, -2, self.height / left_height, left_width, 0)
@@ -63,20 +77,7 @@ function UIBox:draw()
         Draw.draw(sprite, cx, cy, 0, width, height, sprite:getWidth(), sprite:getHeight())
     end
 
-    if self.glass_pane then
-        local glass_realw, glass_realh = self.glass_pane:getDimensions()
-        glass_realw = glass_realw * 2
-        glass_realh = glass_realh * 2
-        local glass_w, glass_h = self.width+off_outer_c*2, self.height+off_outer_c*2
-        -- glass_w, glass_h = SCREEN_WIDTH, SCREEN_HEIGHT
-        self.glass_pane_quad:setViewport(self.x-off_outer_c, self.y-off_outer_c, glass_w, glass_h, glass_realw, glass_realh)
-        Draw.setColor(1,1,1,a)
-        love.graphics.setBlendMode("add")
-        Draw.draw(self.glass_pane, self.glass_pane_quad, self.width/2, self.height/2, 0, 1, 1, glass_w/2, glass_h/2)
-        love.graphics.setBlendMode("alpha")
-    end
-
-    if self.window_shine then
+    --[[if self.window_shine then
         Draw.setColor(1,1,1,a)
         local wshine_width = self.window_shine:getWidth()
         local wshine_height = self.window_shine:getHeight()
@@ -85,7 +86,7 @@ function UIBox:draw()
             0,
             math.floor((self.width+off_outer*2)/wshine_width), math.floor((self.height+off_outer*2)/wshine_height),
             0, 0)
-    end
+    end]]
 
     Draw.setColor(fr,fg,fb,fa or a)
     love.graphics.rectangle("fill", -off_inner, -off_inner, self.width+off_inner*2, self.height+off_inner*2)
