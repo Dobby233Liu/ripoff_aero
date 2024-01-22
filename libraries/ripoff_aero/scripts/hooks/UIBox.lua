@@ -12,6 +12,7 @@ function UIBox:init(x, y, width, height, skin)
     self.glass_pane = Assets.getTexture("ui/box/" .. self.skin .. "/glass_pane")
     if self.glass_pane then
         self.glass_pane:setWrap("repeat", "repeat")
+        self.glass_pane:setFilter("linear", "linear")
         self.glass_pane_quad = love.graphics.newQuad(self.x, self.y, self.width, self.height, self.glass_pane:getDimensions())
     end
 
@@ -41,8 +42,8 @@ function UIBox:draw()
     local off_outer_c = off_outer - 0.5*2
 
     local  r, g, b, a = self:getDrawColor()
-    --r,g,b = unpack(Utils.hexToRgb("#9DA2C4"))
-    local fr,fg,fb    = unpack(self.fill_color)
+    -- r,g,b = unpack(Utils.hexToRgb("#9DA2C4"))
+    local fr,fg,fb,fa  = unpack(self.fill_color)
     local whitened = Utils.lerp({1, 1, 1}, {r, g, b}, self.contrast)
     Draw.setColor(whitened, a*self.frostness)
     love.graphics.rectangle("fill", -off_outer_c, -off_outer_c, self.width+off_outer_c*2, self.height+off_outer_c*2)
@@ -63,8 +64,12 @@ function UIBox:draw()
     end
 
     if self.glass_pane then
+        local glass_realw, glass_realh = self.glass_pane:getDimensions()
+        glass_realw = glass_realw * 2
+        glass_realh = glass_realh * 2
         local glass_w, glass_h = self.width+off_outer_c*2, self.height+off_outer_c*2
-        self.glass_pane_quad:setViewport(self.x-off_outer_c, self.y-off_outer_c, glass_w, glass_h, self.glass_pane:getDimensions())
+        -- glass_w, glass_h = SCREEN_WIDTH, SCREEN_HEIGHT
+        self.glass_pane_quad:setViewport(self.x-off_outer_c, self.y-off_outer_c, glass_w, glass_h, glass_realw, glass_realh)
         Draw.setColor(1,1,1,a)
         Draw.draw(self.glass_pane, self.glass_pane_quad, self.width/2, self.height/2, 0, 1, 1, glass_w/2, glass_h/2)
     end
@@ -73,15 +78,21 @@ function UIBox:draw()
         Draw.setColor(1,1,1,a)
         local wshine_width = self.window_shine:getWidth()
         local wshine_height = self.window_shine:getHeight()
-        Draw.draw(self.window_shine, -off_outer, -off_outer, 0, math.floor((self.width+off_outer*2)/wshine_width), math.floor((self.height+off_outer*2)/wshine_height), 0, 0)
+        Draw.draw(self.window_shine,
+            -off_outer, -off_outer,
+            0,
+            math.floor((self.width+off_outer*2)/wshine_width), math.floor((self.height+off_outer*2)/wshine_height),
+            0, 0)
     end
 
-    Draw.setColor(fr,fg,fb,a)
+    Draw.setColor(fr,fg,fb,fa or a)
     love.graphics.rectangle("fill", -off_inner, -off_inner, self.width+off_inner*2, self.height+off_inner*2)
 
     ---@diagnostic disable-next-line: undefined-field
     super.super.draw(self)
 end
+
+function UIBox:addFX() end
 
 --[[function UIBox:draw()
     if self.skin ~= "darkx" then
