@@ -39,7 +39,7 @@ function UIBox:draw()
 
     local off_inner = 7*2
     local off_outer = 14*2
-    local off_outer_c = off_outer - 0.5*2
+    local off_outer_c = off_outer - 1*2
 
     local  r, g, b, a = self:getDrawColor()
     -- r,g,b = unpack(Utils.hexToRgb("#9DA2C4"))
@@ -71,7 +71,9 @@ function UIBox:draw()
         -- glass_w, glass_h = SCREEN_WIDTH, SCREEN_HEIGHT
         self.glass_pane_quad:setViewport(self.x-off_outer_c, self.y-off_outer_c, glass_w, glass_h, glass_realw, glass_realh)
         Draw.setColor(1,1,1,a)
+        love.graphics.setBlendMode("add")
         Draw.draw(self.glass_pane, self.glass_pane_quad, self.width/2, self.height/2, 0, 1, 1, glass_w/2, glass_h/2)
+        love.graphics.setBlendMode("alpha")
     end
 
     if self.window_shine then
@@ -85,8 +87,8 @@ function UIBox:draw()
             0, 0)
     end
 
-    Draw.setColor(fr,fg,fb,fa or a)
-    love.graphics.rectangle("fill", -off_inner, -off_inner, self.width+off_inner*2, self.height+off_inner*2)
+    --Draw.setColor(fr,fg,fb,fa or a)
+    --love.graphics.rectangle("fill", -off_inner, -off_inner, self.width+off_inner*2, self.height+off_inner*2)
 
     ---@diagnostic disable-next-line: undefined-field
     super.super.draw(self)
