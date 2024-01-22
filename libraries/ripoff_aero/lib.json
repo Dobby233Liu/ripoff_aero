@@ -1,0 +1,15 @@
+{
+    "id": "ripoff_aero",
+    "authors": [
+        "Dobby233Liu",
+        "Microsoft Corporation - original graphic assets"
+    ],
+
+    "version": "v1.0.0",
+    "engineVer": "v0.9.0-dev",
+
+    "config": {
+        "contrast": 0.4,
+        "frostness": 0.125
+    }
+}
