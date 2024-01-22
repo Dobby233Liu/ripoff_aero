@@ -9,6 +9,11 @@ function UIBox:init(x, y, width, height, skin)
     self.top1 = Assets.getFramesOrTexture("ui/box/" .. self.skin .. "/top1")
     self.top2 = Assets.getFramesOrTexture("ui/box/" .. self.skin .. "/top2")
     self.window_shine = Assets.getTexture("ui/box/" .. self.skin .. "/window_shine")
+    self.glass_pane = Assets.getTexture("ui/box/" .. self.skin .. "/glass_pane")
+    if self.glass_pane then
+        self.glass_pane:setWrap("repeat", "repeat")
+        self.glass_pane_quad = love.graphics.newQuad(self.x, self.y, self.width, self.height, self.glass_pane:getDimensions())
+    end
 
     self.contrast = Kristal.getLibConfig("ripoff_aero", "contrast") or 0.4
     self.frostness = Kristal.getLibConfig("ripoff_aero", "frostness") or 0.125
@@ -55,6 +60,13 @@ function UIBox:draw()
         local width  = 2 * ((self.corners[i][1] * 2) - 1) * -1
         local height = 2 * ((self.corners[i][2] * 2) - 1) * -1
         Draw.draw(sprite, cx, cy, 0, width, height, sprite:getWidth(), sprite:getHeight())
+    end
+
+    if self.glass_pane then
+        local glass_w, glass_h = self.width+off_outer_c*2, self.height+off_outer_c*2
+        self.glass_pane_quad:setViewport(self.x-off_outer_c, self.y-off_outer_c, glass_w, glass_h, self.glass_pane:getDimensions())
+        Draw.setColor(1,1,1,a)
+        Draw.draw(self.glass_pane, self.glass_pane_quad, self.width/2, self.height/2, 0, 1, 1, glass_w/2, glass_h/2)
     end
 
     if self.window_shine then
