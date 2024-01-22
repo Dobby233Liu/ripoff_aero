@@ -87,6 +87,11 @@ function UIBox:draw()
             0,
             math.floor((self.width+off_outer*2)/wshine_width), math.floor((self.height+off_outer*2)/wshine_height),
             0, 0)
+        Draw.draw(self.window_shine,
+            self.width+off_outer, -off_outer,
+            0,
+            -math.floor((self.width+off_outer*2)/wshine_width), math.floor((self.height+off_outer*2)/wshine_height),
+            0, 0)
     end]]
 
     Draw.setColor(fr,fg,fb,fa or a)
