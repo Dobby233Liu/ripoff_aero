@@ -87,8 +87,8 @@ function UIBox:draw()
             0, 0)
     end
 
-    --Draw.setColor(fr,fg,fb,fa or a)
-    --love.graphics.rectangle("fill", -off_inner, -off_inner, self.width+off_inner*2, self.height+off_inner*2)
+    Draw.setColor(fr,fg,fb,fa or a)
+    love.graphics.rectangle("fill", -off_inner, -off_inner, self.width+off_inner*2, self.height+off_inner*2)
 
     ---@diagnostic disable-next-line: undefined-field
     super.super.draw(self)
