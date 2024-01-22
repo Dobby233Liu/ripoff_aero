@@ -96,7 +96,7 @@ function UIBox:draw()
     super.super.draw(self)
 end
 
-function UIBox:addFX() end
+--function UIBox:addFX() end
 
 --[[function UIBox:draw()
     if self.skin ~= "darkx" then
