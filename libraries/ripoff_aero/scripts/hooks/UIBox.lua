@@ -11,9 +11,9 @@ function UIBox:init(x, y, width, height, skin)
     self.window_shine = Assets.getTexture("ui/box/" .. self.skin .. "/window_shine")
     self.glass_pane = Assets.getTexture("ui/box/" .. self.skin .. "/glass_pane")
     if self.glass_pane then
-        self.glass_pane:setWrap("repeat", "repeat")
         self.glass_pane:setFilter("linear", "linear")
-        self.glass_pane_quad = love.graphics.newQuad(self.x, self.y, self.width, self.height, self.glass_pane:getDimensions())
+        local w,h = self.glass_pane:getDimensions()
+        self.glass_pane_quad = love.graphics.newQuad(0, 0, w, h, w, h)
     end
 
     self.contrast = Kristal.getLibConfig("ripoff_aero", "contrast") or 0.4
@@ -50,14 +50,15 @@ function UIBox:draw()
 
     if self.glass_pane then
         local glass_realw, glass_realh = self.glass_pane:getDimensions()
-        glass_realw = glass_realw * 2
-        glass_realh = glass_realh * 2
-        local glass_w, glass_h = self.width+off_outer_c*2, self.height+off_outer_c*2
-        -- glass_w, glass_h = SCREEN_WIDTH, SCREEN_HEIGHT
-        self.glass_pane_quad:setViewport(self.x-off_outer_c, self.y-off_outer_c, glass_w, glass_h, glass_realw, glass_realh)
+        local glass_coverage_w, glass_coverage_h = self.width+off_outer_c*2, self.height+off_outer_c*2
+        --glass_coverage_w, glass_coverage_h = SCREEN_WIDTH, SCREEN_HEIGHT
+        local glass_scale = math.max(1, math.min(glass_coverage_w/glass_realw, glass_coverage_h/glass_realh))
+        glass_coverage_w, glass_coverage_h = glass_coverage_w * glass_scale, glass_coverage_h * glass_scale
+        local glass_w, glass_h = glass_realw * glass_scale, glass_realh * glass_scale
+        self.glass_pane_quad:setViewport((glass_w-glass_coverage_w)/2, (glass_h-glass_coverage_h)/2, glass_coverage_w, glass_coverage_h, glass_w, glass_h)
         Draw.setColor(1,1,1,a)
         love.graphics.setBlendMode("add")
-        Draw.draw(self.glass_pane, self.glass_pane_quad, self.width/2, self.height/2, 0, 1, 1, glass_w/2, glass_h/2)
+        Draw.draw(self.glass_pane, self.glass_pane_quad, self.width/2, self.height/2, 0, 1, 1, glass_coverage_w/2, glass_coverage_h/2)
         love.graphics.setBlendMode("alpha")
     end
 
