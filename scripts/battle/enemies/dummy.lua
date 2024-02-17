@@ -27,7 +27,7 @@ function Dummy:init()
     }
 
     -- Dialogue randomly displayed in the enemy's speech bubble
-    self.dialogue = nil
+    self.dialogue = {}
 
     -- Check text (automatically has "ENEMY NAME - " at the start)
     self.check = "Enemy Weakness - ICE\nUse your most powerful ice spell."
@@ -43,7 +43,7 @@ end
 function Dummy:onAct(battler, name)
     -- If the act is none of the above, run the base onAct function
     -- (this handles the Check act)
-    return onAct(self, battler, name)
+    return super.onAct(self, battler, name)
 end
 
 return Dummy
