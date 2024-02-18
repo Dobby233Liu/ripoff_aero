@@ -71,9 +71,9 @@ function Mod:postInit()
         sine = function() return Kristal.getTime() end,
         texture_dim = {SCREEN_WIDTH, SCREEN_HEIGHT},
         clamp_chunk_dim = 0,
-        freq = 10,
-        mag = 5,
-        thickness = {5, 0},
+        freq = 8,
+        mag = 4,
+        thickness = {1, 0},
         ref_other_axis = true
     }))
 end
