@@ -1,9 +1,4 @@
 return function(cutscene)
-    --[[local cb, waitCb
-    local function createWaitCallback()
-        local done = false
-        return function() done = true end, function() return done end
-    end]]
     local function waitTimer(handle)
         return cutscene:wait(function() return handle.count <= 0 end)
     end
