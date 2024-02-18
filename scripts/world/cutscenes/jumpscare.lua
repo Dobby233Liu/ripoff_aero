@@ -1,8 +1,11 @@
 return function(cutscene)
-    local cb, waitCb
+    --[[local cb, waitCb
     local function createWaitCallback()
         local done = false
         return function() done = true end, function() return done end
+    end]]
+    local function waitTimer(handle)
+        return cutscene:wait(function() return handle.count <= 0 end)
     end
 
     local player = Game.world.player
@@ -10,13 +13,10 @@ return function(cutscene)
     local fake_kris = Game.world:spawnObject(Registry.createActor("kris_lw"):createSprite(), "below_soul")
     fake_kris:setScale(2)
     fake_kris:setOrigin(0.5, 1)
-    local away = Utils.pick({80, -80})
-    local away_x, away_y = 0, 0
-    if math.random(1) == 0 then away_x = away else away_y = away end
-    fake_kris:setPosition(player.x + away_x, player.y + away_y)
-    fake_kris:setColor(0.8, 0.8, 1)
-    fake_kris:set("walk")
-    fake_kris:setFacing("down")
+    local dist, dist_dir = Utils.pick({80, -80}), math.random(1)
+    fake_kris:setPosition(player.x + (dist_dir == 0 and dist or 0), player.y + (dist_dir == 1 and dist or 0))
+    fake_kris:setColor(0.7, 0.7, 1)
+    fake_kris:set("walk/down")
     fake_kris.cutout_top = fake_kris.height
 
     local shadow = Game.world:spawnObject(Ellipse(fake_kris.x, fake_kris.y, 0, 0), fake_kris.layer - 0.5)
@@ -29,28 +29,22 @@ return function(cutscene)
         end
     end)
 
-    cb, waitCb = createWaitCallback()
-    cutscene:playSound("bump", 0.95)
-    Game.world.timer:tween(0.2, shadow, {width = fake_kris.width}, "in-cubic", cb)
-    cutscene:wait(waitCb)
+    cutscene:playSound("swallow")
+    Game.world.timer:tween(0.2, shadow, {width = fake_kris.width}, "in-cubic")
+    cutscene:wait(0.25)
 
-    cb, waitCb = createWaitCallback()
-    Game.world.timer:tween(3, fake_kris, {cutout_top = 0}, "linear", cb)
-    local rumble = Game.world.timer:everyInstant(0.2, function() Assets.stopAndPlaySound("wing") end)
-    cutscene:wait(waitCb)
+    local rumble = Game.world.timer:everyInstant(0.15, function() Assets.stopAndPlaySound("wing") end)
+    waitTimer(Game.world.timer:tween(3, fake_kris, {cutout_top = 0}, "linear"))
+
     Game.world.timer:cancel(rumble)
     Assets.stopSound("wing")
 
     player:faceTowards(fake_kris)
-    cb, waitCb = createWaitCallback()
-    player:alert(0.5, {callback = cb})
-    cutscene:wait(waitCb)
+    cutscene:wait(select(2, cutscene:alert(player, 0.5))) -- incomprehensible api
 
-    cb, waitCb = createWaitCallback()
     exiting = true
     cutscene:playSound("petrify")
-    Game.world.timer:tween(1, fake_kris, {cutout_top = fake_kris.height}, "out-sine", cb)
-    cutscene:wait(waitCb)
+    waitTimer(Game.world.timer:tween(1, fake_kris, {cutout_top = fake_kris.height}, "out-sine"))
 
     fake_kris:remove()
     shadow:remove()
