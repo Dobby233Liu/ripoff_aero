@@ -63,6 +63,7 @@ function Mod:postInit()
         texture_dim = {SCREEN_WIDTH, SCREEN_HEIGHT},
         freq = 15,
         broken_freq = true,
+        mag = 10,
         clamp_chunk_dim = 1,
         thickness = {5, 5}
     }))
