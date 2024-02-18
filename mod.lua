@@ -16,7 +16,7 @@ Mod.WAVY_LAKE = love.graphics.newShader[[
 
     extern bool broken_freq = false;
     extern bool y_cos = false;
-    extern bool ref_other_axis = true;
+    extern bool ref_other_axis = false;
 
     vec4 effect(vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords) {
         vec2 chunk = vec2(
@@ -73,6 +73,7 @@ function Mod:postInit()
         clamp_chunk_dim = 0,
         freq = 10,
         mag = 5,
-        thickness = {5, 0}
+        thickness = {5, 0},
+        ref_other_axis = true
     }))
 end
