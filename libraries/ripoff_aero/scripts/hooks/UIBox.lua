@@ -101,6 +101,11 @@ function UIBox:draw()
     super.super.draw(self)
 end
 
+function UIBox:getBorder()
+    if self.skin == "aero" then return 15*2, 15*2 end
+    return super.getBorder(self)
+end
+
 --function UIBox:addFX() end
 
 --[[function UIBox:draw()

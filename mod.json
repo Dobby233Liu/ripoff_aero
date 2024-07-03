@@ -60,5 +60,6 @@
         "kristal": {
             // End of config
         }
-    }
+    },
+    "setWindowTitleAndIcon": true
 }
