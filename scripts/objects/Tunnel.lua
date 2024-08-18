@@ -3,10 +3,12 @@
 local Tunnel, super = Class(Object)
 
 function Tunnel:init()
-    super.init(self, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 320, 320)
+    local scale = 2
+    local size = math.max(SCREEN_WIDTH, SCREEN_HEIGHT) / scale
+    super.init(self, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, size, size)
     self:setParallax(0, 0)
     self:setOrigin(0.5, 0.5)
-    self:setScale(2)
+    self:setScale(scale)
     self:setColor(Utils.hexToRgb("#3FBCDB"))
 
     self.depth_tex = love.graphics.newImage(Assets.getTextureData("DEPTH"), { linear = true, mipmaps = true })
@@ -15,7 +17,7 @@ function Tunnel:init()
 
     self.right = 1
     self.mesh = love.graphics.newMesh({
-        {
+        {   -- top
             0, 0,
             0, 0,
             1, 1, 1
@@ -30,37 +32,40 @@ function Tunnel:init()
             self.right, 0,
             1, 1, 1
         },
-        {
+
+        {   -- right
             self.width, 0,
-            0, 0,
+            self.right+0, 0,
             1, 1, 1
         },
         {
             self.width / 2, self.height / 2,
-            self.right/2, 1,
+            self.right+self.right/2, 1,
             0, 0, 0
         },
         {
             self.width, self.height,
-            self.right, 0,
+            self.right+self.right, 0,
             1, 1, 1
         },
-        {
+
+        {   -- bottom
             0, self.height,
-            0, 0,
+            self.right+0, 0,
             1, 1, 1
         },
         {
             self.width / 2, self.height / 2,
-            self.right/2, 1,
+            self.right+self.right/2, 1,
             0, 0, 0
         },
         {
             self.width, self.height,
-            self.right, 0,
+            self.right+self.right, 0,
             1, 1, 1
         },
-        {
+
+        {   -- left
             0, 0,
             0, 0,
             1, 1, 1
@@ -93,9 +98,11 @@ end
 
 function Tunnel:update()
     for i = 0, 4 - 1 do
-        self.mesh:setVertexAttribute(3*i + 1, 2, 0, -self.sink_factor)
-        self.mesh:setVertexAttribute(3*i + 2, 2, self.right/2, 1-self.sink_factor)
-        self.mesh:setVertexAttribute(3*i + 3, 2, self.right, -self.sink_factor)
+        local left_adjust = 0
+        if i == 1 or i == 2 then left_adjust = self.right end
+        self.mesh:setVertexAttribute(3*i + 1, 2, left_adjust+0, -self.sink_factor)
+        self.mesh:setVertexAttribute(3*i + 2, 2, left_adjust+self.right/2, 1-self.sink_factor)
+        self.mesh:setVertexAttribute(3*i + 3, 2, left_adjust+self.right, -self.sink_factor)
     end
 
     self.sink_factor = Utils.clampWrap(self.sink_factor + DTMULT/2000, 0, 1)
