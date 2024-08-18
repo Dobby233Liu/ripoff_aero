@@ -16,6 +16,7 @@ function Tunnel:init()
     self.depth_tex:setWrap("mirroredrepeat", "mirroredrepeat")
 
     self.right = 1
+    local left_adjust = self.right
     self.mesh = love.graphics.newMesh({
         {   -- top
             0, 0,
@@ -35,33 +36,33 @@ function Tunnel:init()
 
         {   -- right
             self.width, 0,
-            self.right+0, 0,
+            left_adjust+0, 0,
             1, 1, 1
         },
         {
             self.width / 2, self.height / 2,
-            self.right+self.right/2, 1,
+            left_adjust+self.right/2, 1,
             0, 0, 0
         },
         {
             self.width, self.height,
-            self.right+self.right, 0,
+            left_adjust+self.right, 0,
             1, 1, 1
         },
 
         {   -- bottom
             0, self.height,
-            self.right+0, 0,
+            left_adjust+0, 0,
             1, 1, 1
         },
         {
             self.width / 2, self.height / 2,
-            self.right+self.right/2, 1,
+            left_adjust+self.right/2, 1,
             0, 0, 0
         },
         {
             self.width, self.height,
-            self.right+self.right, 0,
+            left_adjust+self.right, 0,
             1, 1, 1
         },
 
