@@ -3,7 +3,7 @@
 local Tunnel, super = Class(Object)
 
 function Tunnel:init()
-    super.init(self, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
+    super.init(self, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 400, 400)
     self:setParallax(0, 0)
     self:setOrigin(0.5, 0.5)
     self:setScale(2)
