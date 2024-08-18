@@ -13,6 +13,7 @@ function Tunnel:init()
     self.depth_tex:setMipmapFilter("linear")
     self.depth_tex:setWrap("mirroredrepeat", "mirroredrepeat")
 
+    self.right = 1
     self.mesh = love.graphics.newMesh({
         {
             0, 0,
@@ -21,12 +22,12 @@ function Tunnel:init()
         },
         {
             self.width / 2, self.height / 2,
-            1, 1,
+            self.right/2, 1,
             0, 0, 0
         },
         {
             self.width, 0,
-            2, 0,
+            self.right, 0,
             1, 1, 1
         },
         {
@@ -36,12 +37,12 @@ function Tunnel:init()
         },
         {
             self.width / 2, self.height / 2,
-            1, 1,
+            self.right/2, 1,
             0, 0, 0
         },
         {
             self.width, self.height,
-            2, 0,
+            self.right, 0,
             1, 1, 1
         },
         {
@@ -51,12 +52,12 @@ function Tunnel:init()
         },
         {
             self.width / 2, self.height / 2,
-            1, 1,
+            self.right/2, 1,
             0, 0, 0
         },
         {
             self.width, self.height,
-            2, 0,
+            self.right, 0,
             1, 1, 1
         },
         {
@@ -66,12 +67,12 @@ function Tunnel:init()
         },
         {
             self.width / 2, self.height / 2,
-            1, 1,
+            self.right/2, 1,
             0, 0, 0
         },
         {
             0, self.height,
-            2, 0,
+            self.right, 0,
             1, 1, 1
         },
     }, "triangles")
@@ -93,8 +94,8 @@ end
 function Tunnel:update()
     for i = 0, 4 - 1 do
         self.mesh:setVertexAttribute(3*i + 1, 2, 0, -self.sink_factor)
-        self.mesh:setVertexAttribute(3*i + 2, 2, 1, 1-self.sink_factor)
-        self.mesh:setVertexAttribute(3*i + 3, 2, 2, -self.sink_factor)
+        self.mesh:setVertexAttribute(3*i + 2, 2, self.right/2, 1-self.sink_factor)
+        self.mesh:setVertexAttribute(3*i + 3, 2, self.right, -self.sink_factor)
     end
 
     self.sink_factor = Utils.clampWrap(self.sink_factor + DTMULT/2000, 0, 1)
