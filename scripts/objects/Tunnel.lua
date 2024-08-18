@@ -3,15 +3,16 @@
 local Tunnel, super = Class(Object)
 
 function Tunnel:init()
-    local scale = 2
-    local size = math.max(SCREEN_WIDTH, SCREEN_HEIGHT) / scale
+    local quality = 0.375
+    local size = math.max(SCREEN_WIDTH, SCREEN_HEIGHT) / (1/quality)
     super.init(self, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, size, size)
     self:setParallax(0, 0)
     self:setOrigin(0.5, 0.5)
-    self:setScale(scale)
+    self:setScale(1/quality)
     self:setColor(Utils.hexToRgb("#3FBCDB"))
 
-    self.depth_tex = love.graphics.newImage(Assets.getTextureData("DEPTH"), { linear = true, mipmaps = true })
+    self.depth_tex = love.graphics.newImage(Assets.getTextureData("DEPTH"), { mipmaps = true })
+    self.depth_tex:setFilter("linear", "linear")
     self.depth_tex:setMipmapFilter("linear")
     self.depth_tex:setWrap("mirroredrepeat", "mirroredrepeat")
 
