@@ -2,6 +2,8 @@ local RestitchedActor, super = Class(ActorSprite)
 
 function RestitchedActor:init(actor)
     super.init(self, actor)
+    self:setOrigin(0, 0)
+    self:setScale(1)
 	
     self.spr = Assets.getFramesOrTexture("npcs/restitched/sSpamRig")
     self.needle_spr = Assets.getTexture("npcs/restitched/sNeedles_2")
@@ -11,9 +13,6 @@ function RestitchedActor:init(actor)
     self.power_alpha = 0
 	
     self.mov_x = 0
-	
-    self.spam_xscale = 2
-    self.spam_yscale = 2
 	
     self.bod_x = self.x
     self.bod_y = self.y
@@ -97,8 +96,8 @@ function RestitchedActor:draw()
     local function scrMoveROT(x, y, angle, radius)
         self.x = x
         self.y = y
-        self.x = self.x + ((math.cos(angle / 57)) * radius * (self.spam_xscale / 2))
-        self.y = self.y - ((math.sin(angle / 57)) * radius * (self.spam_yscale / 2))
+        self.x = self.x + ((math.cos(angle / 57)) * radius * (self.scale_x / 2))
+        self.y = self.y - ((math.sin(angle / 57)) * radius * (self.scale_y / 2))
     end
 	
     --reset origin to top left corner of window being 0,0
@@ -193,8 +192,8 @@ function RestitchedActor:draw()
           (self.x + (love.math.random((-self.limb_shake), self.limb_shake))), 
           (self.y + (love.math.random((-self.limb_shake), self.limb_shake))), 
           -math.rad(self.whole_rot + 10 + (math.sin(self.anim_speed * self.tyme_1 * 0.1)) * 2), 
-          2, 
-          2,
+          1, 
+          1,
           5,
           5
         )
@@ -215,8 +214,8 @@ function RestitchedActor:draw()
           (self.x + (love.math.random((-self.limb_shake), self.limb_shake))), 
           (self.y + (love.math.random((-self.limb_shake), self.limb_shake))), 
           -math.rad(self.whole_rot + (math.sin(5 + self.anim_speed * self.tyme_1 * 0.1)) * 2), 
-          2, 
-          2,
+          1, 
+          1,
           5,
           5
         )
@@ -237,8 +236,8 @@ function RestitchedActor:draw()
           (self.x + (love.math.random((-self.limb_shake), self.limb_shake))), 
           (self.y + (love.math.random((-self.limb_shake), self.limb_shake))), 
           -math.rad(self.whole_rot - 10 + (math.sin(10 + self.anim_speed * self.tyme_1 * 0.1)) * 2), 
-          2, 
-          2,
+          1, 
+          1,
           5,
           5
         )
@@ -279,8 +278,8 @@ function RestitchedActor:draw()
       self.x + (love.math.random((-self.limb_shake), self.limb_shake)), 
       self.y + (love.math.random((-self.limb_shake), self.limb_shake)), 
       -math.rad(self.whole_rot), 
-      ((self.spam_xscale - 1.25 + (math.sin(self.tyme_1 * -0.05)) * 0.25) * self._Wings), 
-      (self.spam_yscale * self._Wings), 
+      ((self.scale_x - 1.25 + (math.sin(self.tyme_1 * -0.05)) * 0.25) * self._Wings), 
+      (self.scale_y * self._Wings), 
       50,
       50
 	)
@@ -289,8 +288,8 @@ function RestitchedActor:draw()
       self.x + (love.math.random((-self.limb_shake), self.limb_shake)), 
       self.y + (love.math.random((-self.limb_shake), self.limb_shake)), 
       -math.rad(self.whole_rot), 
-      ((self.spam_xscale - 0.5 + (math.sin(self.tyme_1 * 0.05)) * 0.25) * self._Wings), 
-      (self.spam_yscale * self._Wings), 
+      ((self.scale_x - 0.5 + (math.sin(self.tyme_1 * 0.05)) * 0.25) * self._Wings), 
+      (self.scale_y * self._Wings), 
       50,
       50
 	)
@@ -302,8 +301,8 @@ function RestitchedActor:draw()
           self.x + 1, 
           self.y, 
           math.rad(self.string_rot + (math.sin(self.tyme_1 * 0.03)) - 1), 
-          1, 
-          self.L_ArmStringScale, 
+          self.scale_x*1, 
+          self.scale_y*self.L_ArmStringScale, 
           50,
           50
 	    )
@@ -313,9 +312,9 @@ function RestitchedActor:draw()
     Draw.draw(self.spr[self.Index_Arms + 1],                      -- left arm
       self.x + (love.math.random((-self.limb_shake), self.limb_shake)), 
       self.y + (love.math.random((-self.limb_shake), self.limb_shake)), 
-      -math.rad(self.L_Arm_Rot * (self.spam_xscale / 2)), 
-      self.spam_xscale, 
-      self.spam_yscale, 
+      -math.rad(self.L_Arm_Rot * (self.scale_x / 2)), 
+      self.scale_x, 
+      self.scale_y, 
       50,
       50
 	)
@@ -327,8 +326,8 @@ function RestitchedActor:draw()
           self.x + 1, 
           self.y, 
           math.rad(self.string_rot + (math.sin(self.tyme_1 * -0.03)) + 1), 
-          1, 
-          self.L_ArmStringScale, 
+          self.scale_x*1, 
+          self.scale_y*self.L_ArmStringScale, 
           50,
           50
 	    )
@@ -338,9 +337,9 @@ function RestitchedActor:draw()
     Draw.draw(self.spr[8],                                        -- left leg
       self.x + (love.math.random((-self.limb_shake), self.limb_shake)), 
       self.y + (love.math.random((-self.limb_shake), self.limb_shake)), 
-      -math.rad(self.L_Leg_Rot * (self.spam_xscale / 2)), 
-      self.spam_xscale, 
-      self.spam_yscale, 
+      -math.rad(self.L_Leg_Rot * (self.scale_x / 2)), 
+      self.scale_x, 
+      self.scale_y, 
       50,
       50
 	)
@@ -348,8 +347,8 @@ function RestitchedActor:draw()
       self.bod_x + (love.math.random((-self.limb_shake), self.limb_shake)), 
       self.bod_y + (love.math.random((-self.limb_shake), self.limb_shake)), 
       -math.rad(self.whole_rot + (math.sin(self.anim_speed * self.tyme_1 * 0.057)) * 15), 
-      self.spam_xscale, 
-      self.spam_yscale, 
+      self.scale_x, 
+      self.scale_y, 
       50,
       50
 	)
@@ -357,9 +356,9 @@ function RestitchedActor:draw()
     Draw.draw(self.spr[7],                                        -- right leg
       self.x + (love.math.random((-self.limb_shake), self.limb_shake)), 
       self.y + (love.math.random((-self.limb_shake), self.limb_shake)), 
-      -math.rad(self.R_Leg_Rot * (self.spam_xscale / 2)), 
-      self.spam_xscale, 
-      self.spam_yscale, 
+      -math.rad(self.R_Leg_Rot * (self.scale_x / 2)), 
+      self.scale_x, 
+      self.scale_y, 
       50,
       50
 	)
@@ -367,8 +366,8 @@ function RestitchedActor:draw()
       self.bod_x + (love.math.random((-self.limb_shake), self.limb_shake)), 
       self.bod_y + (love.math.random((-self.limb_shake), self.limb_shake)), 
       -math.rad(self.whole_rot + (math.sin(self.anim_speed * self.tyme_1 * 0.057)) * 15), 
-      self.spam_xscale, 
-      self.spam_yscale, 
+      self.scale_x, 
+      self.scale_y, 
       50,
       50
 	)
@@ -377,9 +376,9 @@ function RestitchedActor:draw()
     Draw.draw(self.spr[self.Index_Head],                          -- head
       self.x + (love.math.random((-self.limb_shake), self.limb_shake)), 
       self.y + (love.math.random((-self.limb_shake), self.limb_shake)), 
-      -math.rad(self.head_rot * (self.spam_xscale / 2) + self.whole_rot), 
-      self.spam_xscale * self.head_scale, 
-      self.spam_yscale * self.head_scale, 
+      -math.rad(self.head_rot * (self.scale_x / 2) + self.whole_rot), 
+      self.scale_x * self.head_scale, 
+      self.scale_y * self.head_scale, 
       50,
       50
 	)
@@ -415,7 +414,7 @@ function RestitchedActor:draw()
           self.x + (love.math.random((-self.limb_shake), self.limb_shake)), 
           self.y + (love.math.random((-self.limb_shake), self.limb_shake)), 
           math.rad(self.string_rot + (math.sin(self.tyme_1 * 0.03)) + 1), 
-          1, 
+          self.scale_x*1, 
           self.R_ArmStringScale, 
           50,
           50
@@ -426,9 +425,9 @@ function RestitchedActor:draw()
     Draw.draw(self.spr[self.Index_Arms],                          -- right arm
       self.x + (love.math.random((-self.limb_shake), self.limb_shake)), 
       self.y + (love.math.random((-self.limb_shake), self.limb_shake)), 
-      -math.rad(self.R_Arm_Rot * (self.spam_xscale / 2)), 
-      self.spam_xscale, 
-      self.spam_yscale, 
+      -math.rad(self.R_Arm_Rot * (self.scale_x / 2)), 
+      self.scale_x, 
+      self.scale_y, 
       50,
       50
 	)
@@ -442,7 +441,7 @@ function RestitchedActor:draw()
           self.x + (love.math.random((-self.limb_shake), self.limb_shake)), 
           self.y + (love.math.random((-self.limb_shake), self.limb_shake)), 
           math.rad(self.string_rot + (math.sin(self.tyme_1 * -0.03)) - 1), 
-          1, 
+          self.scale_x*1, 
           self.R_ArmStringScale, 
           50,
           50
