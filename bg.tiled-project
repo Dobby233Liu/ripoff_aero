@@ -6,7 +6,8 @@
     "folders": [
         "scripts/world"
     ],
-    "objectTypesFile": "",
+    "properties": [
+    ],
     "propertyTypes": [
     ]
 }

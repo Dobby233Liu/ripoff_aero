@@ -1,4 +1,4 @@
-local Dummy, super = Class(Encounter)
+local Dummy, super = Class(ExtendedEncounter)
 
 function Dummy:init()
     super.init(self)
@@ -20,6 +20,8 @@ function Dummy:init()
 
     -- Disable all SnowGrave cutscenes
     self.yeetus = false
+
+    self.bg_drawer = BattleBGInsane
 end
 
 function Dummy:getSpellCutscene(id)

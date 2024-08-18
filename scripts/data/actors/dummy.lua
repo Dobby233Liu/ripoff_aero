@@ -35,7 +35,9 @@ function actor:init()
     self.can_blush = false
 
     -- Table of talk sprites and their talk speeds (default 0.25)
-    self.talk_sprites = {}
+    self.talk_sprites = {
+        ["ttenna"] = 0.25
+    }
 
     -- Table of sprite animations
     self.animations = {
