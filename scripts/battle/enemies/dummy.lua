@@ -38,9 +38,16 @@ function Dummy:init()
     }
     -- Text displayed at the bottom of the screen when the enemy has low health
     self.low_health_text = ""
+
+    self:registerAct("Pet")
 end
 
 function Dummy:onAct(battler, name)
+    if name == "Pet" or name == "Standard" then
+        Game.battle:pushForcedAction(battler, "PET", self)
+        return "* User will attack"
+    end
+
     -- If the act is none of the above, run the base onAct function
     -- (this handles the Check act)
     return super.onAct(self, battler, name)
