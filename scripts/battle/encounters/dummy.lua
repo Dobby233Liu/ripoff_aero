@@ -9,9 +9,6 @@ function Dummy:init()
     -- Text displayed at the bottom of the screen at the start of the encounter
     self.text = "* Dummy blocks the way!"
 
-    -- Battle music
-    self.music = "berdly_battle_heartbeat_true"
-
     -- Add the dummy enemy to the encounter
     self:addEnemy("dummy")
 
