@@ -1,4 +1,4 @@
-local ExtendedEncounter, super = Class(Encounter)
+local ExtendedEncounter, super = Class("Encounter")
 
 function ExtendedEncounter:init()
     super.init(self)
@@ -27,6 +27,7 @@ end
 function ExtendedEncounter:drawBackground(alpha) end
 
 function ExtendedEncounter:beforeStateChange(old, new)
+    super.beforeStateChange(self, old, new)
     self:ensureBGDrawerExists()
     self.bg_drawer_obj:onStateChange(old, new)
 end
