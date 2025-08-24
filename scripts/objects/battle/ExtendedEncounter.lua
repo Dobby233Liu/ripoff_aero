@@ -1,3 +1,4 @@
+---@class ExtendedEncounter : Encounter
 local ExtendedEncounter, super = Class("Encounter")
 
 function ExtendedEncounter:init()

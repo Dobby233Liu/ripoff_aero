@@ -53,4 +53,12 @@ function Dummy:onAct(battler, name)
     return super.onAct(self, battler, name)
 end
 
+function Dummy:getNextWaves()
+    return {
+        "finish_race1",
+        "finish_race2",
+        "finish_race3",
+    }
+end
+
 return Dummy

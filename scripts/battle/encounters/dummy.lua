@@ -1,3 +1,4 @@
+---@class Encounter.dummy : ExtendedEncounter
 local Dummy, super = Class(ExtendedEncounter)
 
 function Dummy:init()
@@ -19,6 +20,8 @@ function Dummy:init()
     self.yeetus = false
 
     self.bg_drawer = BattleBGInsane
+
+    self:addEnem("dummy")
 end
 
 function Dummy:getSpellCutscene(id)

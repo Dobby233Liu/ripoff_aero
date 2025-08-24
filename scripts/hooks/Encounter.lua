@@ -1,3 +1,4 @@
+---@class Encounter
 local Encounter, super = Utils.hookScript("Encounter")
 
 function Encounter:beforeStateChange(old, new)
@@ -19,6 +20,10 @@ function Encounter:beforeStateChange(old, new)
     end
 
     return super.beforeStateChange(self, old, new)
+end
+
+function Encounter:addEnem(...)
+    self:addEnemy(...)
 end
 
 return Encounter
