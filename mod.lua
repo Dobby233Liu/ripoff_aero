@@ -2,9 +2,8 @@ function Mod:getUISkin()
     return "aero"
 end
 
-Mod.WAVY_LAKE = modRequire("ultimate_wave")
-
 function Mod:postInit()
+    Mod.WAVY_LAKE = modRequire("ultimate_wave")
     --[[Game.world:addFX(ShaderFX(Mod.WAVY_LAKE, {
         sine = function() return Kristal.getTime() end,
         texture_dim = {SCREEN_WIDTH, SCREEN_HEIGHT},
