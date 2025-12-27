@@ -10,7 +10,7 @@ return {
   tilewidth = 40,
   tileheight = 40,
   nextlayerid = 9,
-  nextobjectid = 42,
+  nextobjectid = 46,
   properties = {
     ["name"] = "Test Map - Room 2"
   },
@@ -380,6 +380,70 @@ return {
             ["exit_delay"] = 0.1,
             ["map"] = "room2",
             ["marker"] = "island1"
+          }
+        },
+        {
+          id = 42,
+          name = "spec",
+          type = "enemy",
+          shape = "rectangle",
+          x = 1078,
+          y = 47,
+          width = 40,
+          height = 40,
+          rotation = 0,
+          visible = true,
+          properties = {
+            ["actor"] = "dummy",
+            ["encounter"] = "dummy"
+          }
+        },
+        {
+          id = 43,
+          name = "spec",
+          type = "enemy",
+          shape = "rectangle",
+          x = 997,
+          y = 248,
+          width = 40,
+          height = 40,
+          rotation = 0,
+          visible = true,
+          properties = {
+            ["actor"] = "dummy",
+            ["encounter"] = "dummy"
+          }
+        },
+        {
+          id = 44,
+          name = "spec",
+          type = "enemy",
+          shape = "rectangle",
+          x = 912,
+          y = 379,
+          width = 40,
+          height = 40,
+          rotation = 0,
+          visible = true,
+          properties = {
+            ["actor"] = "dummy",
+            ["encounter"] = "dummy"
+          }
+        },
+        {
+          id = 45,
+          name = "spec",
+          type = "enemy",
+          shape = "rectangle",
+          x = 1039,
+          y = 142,
+          width = 40,
+          height = 40,
+          rotation = 0,
+          visible = true,
+          properties = {
+            ["actor"] = "dummy",
+            ["encounter"] = "dummy"
           }
         }
       }
