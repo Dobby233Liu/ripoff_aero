@@ -9,8 +9,8 @@ return {
   height = 12,
   tilewidth = 40,
   tileheight = 40,
-  nextlayerid = 9,
-  nextobjectid = 46,
+  nextlayerid = 10,
+  nextobjectid = 51,
   properties = {
     ["name"] = "Test Map - Room 2"
   },
