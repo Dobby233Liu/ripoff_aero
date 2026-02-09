@@ -61,13 +61,17 @@ function Mod:onBattleAction(action, action_name, battler, enemy)
                 else
                     dmg_sprite:setScale(2, 2)
                 end
-                local relative_pos_x, relative_pos_y = enemy:getRelativePos(enemy.width/2, enemy.height/2)
-                dmg_sprite:setPosition(relative_pos_x + enemy.dmg_sprite_offset[1], relative_pos_y + enemy.dmg_sprite_offset[2])
+                local relative_pos_x, relative_pos_y = enemy:getRelativePos(enemy.width / 2, enemy.height / 2)
+                dmg_sprite:setPosition(relative_pos_x + enemy.dmg_sprite_offset[1],
+                    relative_pos_y + enemy.dmg_sprite_offset[2])
                 dmg_sprite:setLayer(enemy.layer + 0.01)
                 dmg_sprite.battler_id = action.character_id or nil
                 table.insert(enemy.dmg_sprites, dmg_sprite)
-                local dmg_anim_speed = 1/15
-                dmg_sprite:play(dmg_anim_speed, false, function(s) s:remove(); Utils.removeFromTable(enemy.dmg_sprites, dmg_sprite) end) -- Remove itself and Remove the dmg_sprite from the enemy's dmg_sprite table when its removed
+                local dmg_anim_speed = 1 / 15
+                dmg_sprite:play(dmg_anim_speed, false,
+                    function(s)
+                        s:remove(); Utils.removeFromTable(enemy.dmg_sprites, dmg_sprite)
+                    end) -- Remove itself and Remove the dmg_sprite from the enemy's dmg_sprite table when its removed
                 enemy.parent:addChild(dmg_sprite)
             end
             enemy:addMercy(damage)
@@ -92,4 +96,11 @@ function Mod:onBattleAction(action, action_name, battler, enemy)
 
         return false
     end
+end
+
+function Mod:registerTextCommands(text)
+    text:registerCommand("my_letter_position_effect", function(text, node, dry)
+        text.state.my_letter_position_effect = node.arguments[1] ~= "off"
+        text.draw_every_frame = true
+    end, { dry = true })
 end
