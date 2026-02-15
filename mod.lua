@@ -13,6 +13,7 @@ function Mod:postInit()
         thickness = {1, 0},
         ref_other_axis = true
     }))]]
+    self:addOnBattleActionEndImmediateHook()
 end
 
 ---@param battler PartyBattler
@@ -103,4 +104,25 @@ function Mod:registerTextCommands(text)
         text.state.my_letter_position_effect = node.arguments[1] ~= "off"
         text.draw_every_frame = true
     end, { dry = true })
+end
+
+-- do something like this somewhere
+function Mod:addOnBattleActionEndImmediateHook()
+    HookSystem.hook(Battle, "finishAction", function(orig, self, action, ...)
+        local ret = orig(self, action, ...)
+        Kristal.callEvent("onBattleActionEndImmediate", action, action.action, self.party[action.character_id], action.target)
+        return ret
+    end)
+end
+
+function Mod:onBattleActionBegin(action, action_name, battler, target)
+    if (action_name == "ATTACK" or action_name == "AUTOATTACK") and target.onAttackStart then
+        target:onAttackStart(battler, action)
+    end
+end
+
+function Mod:onBattleActionEndImmediate(action, action_name, battler, target)
+    if (action_name == "ATTACK" or action_name == "AUTOATTACK") and target.onAttackEnd then
+        target:onAttackEnd(battler, action)
+    end
 end

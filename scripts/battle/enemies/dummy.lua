@@ -53,12 +53,12 @@ function Dummy:onAct(battler, name)
     return super.onAct(self, battler, name)
 end
 
-function Dummy:getNextWaves()
-    return {
-        "finish_race1",
-        "finish_race2",
-        "finish_race3",
-    }
+function Dummy:onAttackStart(battler, action)
+    self.sprite.flip_x = true
+end
+
+function Dummy:onAttackEnd(battler, action)
+    self.sprite.flip_x = false
 end
 
 return Dummy
