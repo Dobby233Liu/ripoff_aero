@@ -1,0 +1,30 @@
+{
+  "lsp": {
+    "lua-language-server": {
+      "settings": {
+        "Lua": {
+          "diagnostics": {
+            "disable": [
+              "duplicate-set-field",
+              "need-check-nil",
+              "undefined-global",
+            ],
+          },
+          "type": { "weakNilCheck": true, "weakUnionCheck": true },
+          "runtime": {
+            "version": "LuaJIT",
+            "builtin": {
+              "utf8": "enable",
+            },
+            "special": {
+              "modRequire": "require",
+            },
+          },
+          "workspace": {
+            "library": ["${3rd}/love2d/library", "${env:KRISTAL_PATH}"],
+          },
+        },
+      },
+    },
+  },
+}
