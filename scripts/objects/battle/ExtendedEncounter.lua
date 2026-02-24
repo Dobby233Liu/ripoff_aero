@@ -28,9 +28,10 @@ end
 function ExtendedEncounter:drawBackground(alpha) end
 
 function ExtendedEncounter:beforeStateChange(old, new)
-    super.beforeStateChange(self, old, new)
+    local bc = super.beforeStateChange(self, old, new)
     self:ensureBGDrawerExists()
     self.bg_drawer_obj:onStateChange(old, new)
+    return bc
 end
 
 return ExtendedEncounter
