@@ -1,0 +1,13 @@
+local Music_orig = CLASS_NAME_GETTER("Music")
+
+local LibMusic, super = HookSystem.hookScript(Music_orig.lib)
+
+function LibMusic:init(...)
+    super.init(self, ...)
+    print(debug.traceback())
+end
+
+local Music, xsuper = HookSystem.hookScript(Music_orig)
+Music.lib = LibMusic
+
+return Music
