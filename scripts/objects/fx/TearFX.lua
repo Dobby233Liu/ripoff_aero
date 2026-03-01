@@ -1,6 +1,6 @@
 -- Based on code from:
 -- https://github.com/Bronya-Rand/DDLCModTemplate2.0/blob/1c7a92bd38dd6a81fc915bb0de9ebcaafdde91aa/game/definitions/effects.rpy#L117
----@class TearedImage : FXBase
+---@class TearFX : FXBase
 local TearFX, super = Class("FXBase")
 
 function TearFX:init(width, height, tears, off_time_mult, on_time_mult, x_off_min, x_off_max, priority)
@@ -33,7 +33,7 @@ function TearFX:makeTearingScreen(tears, off_time_mult, on_time_mult, x_off_min,
     return spr
 end
 
----@class TearedImage.Piece
+---@class TearFX.Piece
 ---@field quad love.Quad
 ---@field x number
 ---@field y number
@@ -53,7 +53,7 @@ function TearFX:createPieces(tears, off_time_mult, on_time_mult, x_off_min, x_of
     end
     table.sort(tear_points)
 
-    ---@type TearedImage.Piece[]
+    ---@type TearFX.Piece[]
     self.pieces = {}
     for i = 1, math.max(0, #tear_points - 1) do
         local start = tear_points[i]
@@ -70,7 +70,7 @@ function TearFX:createPieces(tears, off_time_mult, on_time_mult, x_off_min, x_of
     end
 end
 
----@param piece TearedImage.Piece
+---@param piece TearFX.Piece
 function TearFX:updatePiece(piece)
     local timer = self.screen_time % (piece.off_time + piece.on_time)
     if timer > piece.off_time then
