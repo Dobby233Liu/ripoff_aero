@@ -57,22 +57,22 @@ function ScreenBloomFX:draw(texture)
     end
 
     local function lengthdir_x(radius, angle)
-        return math.cos(math.rad(angle)) * radius
+        return math.cos(angle) * radius
     end
     local function lengthdir_y(radius, angle)
-        return math.sin(math.rad(angle)) * radius
+        return math.sin(angle) * radius
     end
     if self.style == 2 then
         Draw.setColor(1, 1, 1, 0.6)
         for i = 0, 3 do
-            local ang = 90*i + self.siner*2
+            local ang = math.rad(-90*i - self.siner*2)
             Draw.draw(texture, lengthdir_x(distance*2, ang), lengthdir_y(distance*2, ang))
         end
     end
     if self.style == 2 or self.style == 3 then
         Draw.setColor(1, 1, 1, 0.5)
         for i = 0, 3 do
-            local ang = 45 + 90*i + self.siner*2
+            local ang = math.rad(-45 - 90*i - self.siner*2)
             Draw.draw(texture, lengthdir_x(distance, ang), lengthdir_y(distance, ang))
         end
     end
