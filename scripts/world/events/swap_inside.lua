@@ -7,7 +7,7 @@ function SwapInside:init(data)
 end
 
 function SwapInside:onCollide(player)
-    if Input.down("SC") and #Game.party > 1 then
+    if Input.pressed("SC") and #Game.party > 1 then
         local old_party_ord = {}
         for _, party in ipairs(Game.party) do
             table.insert(old_party_ord, party.id)
