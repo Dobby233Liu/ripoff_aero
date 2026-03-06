@@ -61,5 +61,14 @@
             // End of config
         }
     },
-    "setWindowTitleAndIcon": true
+    "setWindowTitleAndIcon": true,
+
+    "keybinds": [
+        {
+            "name": "Swap Character",
+            "id": "SC",
+            "keys": ["v"],
+            "gamepad": ["gamepad:leftshoulder"]
+        }
+    ]
 }

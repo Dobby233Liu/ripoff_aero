@@ -10,7 +10,7 @@ return {
   tilewidth = 40,
   tileheight = 40,
   nextlayerid = 10,
-  nextobjectid = 51,
+  nextobjectid = 52,
   properties = {
     ["name"] = "Test Map - Room 2"
   },
@@ -445,6 +445,19 @@ return {
             ["actor"] = "dummy",
             ["encounter"] = "dummy"
           }
+        },
+        {
+          id = 51,
+          name = "swap_inside",
+          type = "",
+          shape = "rectangle",
+          x = 788,
+          y = 322.667,
+          width = 54.6667,
+          height = 76,
+          rotation = 0,
+          visible = true,
+          properties = {}
         }
       }
     }
