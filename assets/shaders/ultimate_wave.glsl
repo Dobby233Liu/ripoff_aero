@@ -13,31 +13,31 @@ uniform bool broken_freq;
 uniform bool y_cos;
 uniform bool ref_other_axis;
 
-vec2 round(vec2 v) {
-    return floor(v + 0.5);
+vec2 round(vec2 x) {
+    return floor(x + 0.5);
 }
 
 bool in_bounds(number x, number a, number b) {
     return x >= a && x <= b;
 }
 
-vec2 roundize(vec2 x, vec2 y) {
-    return round(x / y) * y;
+vec2 align(vec2 a, vec2 b) {
+    return round(a / b) * b;
 }
 
 number calc_siner(number diff) {
     return broken_freq ? ((sine + diff * diff_freq) * freq) : (sine * freq + diff * diff_freq);
 }
 
-vec4 effect(vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords) {
+vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) {
     vec2 _thickness = max(vec2(0.0), thickness);
 
     vec2 texture_coords_physical = texture_coords * texture_dim;
-    vec2 chunk = roundize(texture_coords_physical, _thickness);
+    vec2 chunk = align(texture_coords_physical, _thickness);
     vec2 chunk_ref = chunk;
     if (ref_other_axis) {
         vec2 texture_coords_yx_physical = texture_coords.yx * texture_dim;
-        chunk_ref = roundize(texture_coords_yx_physical, _thickness);
+        chunk_ref = align(texture_coords_yx_physical, _thickness);
     }
 
     if (_thickness.x > 0.0) {
@@ -69,5 +69,5 @@ vec4 effect(vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords) {
     else if (!in_bounds(texture_coords.x, 0.0, 1.0) || !in_bounds(texture_coords.y, 0.0, 1.0))
         discard;
 
-    return Texel(tex, texture_coords) * color;
+    return Texel(texture, texture_coords) * color;
 }
