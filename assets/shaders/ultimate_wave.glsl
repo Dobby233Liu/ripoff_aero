@@ -71,7 +71,7 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) 
     vec2 texture_topleftmost = vec2(0.0);
     if (clamp_final_coords)
         texture_coords_physical = clamp(texture_coords_physical, texture_topleftmost, texture_dim);
-    else if (!in_bounds(texture_coords, texture_topleftmost, texture_dim))
+    else if (!in_bounds(texture_coords_physical, texture_topleftmost, texture_dim))
         discard;
     texture_coords = texture_coords_physical / texture_dim;
 
