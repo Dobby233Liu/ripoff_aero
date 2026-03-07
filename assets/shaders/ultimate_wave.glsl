@@ -34,46 +34,45 @@ number calc_siner(number diff) {
     return sine * freq + diff * diff_freq;
 }
 
-vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) {
+vec4 effect(vec4 color, Image texture, vec2 texture_coords_norm, vec2 screen_coords) {
     vec2 _thickness = max(vec2(0.0), thickness);
 
-    vec2 texture_coords_physical = texture_coords * texture_dim;
-    vec2 chunk = align(texture_coords_physical, _thickness);
+    vec2 texture_coords = texture_coords_norm * texture_dim;
+    vec2 chunk = align(texture_coords, _thickness);
     vec2 chunk_ref = chunk;
     if (ref_other_axis) {
-        vec2 texture_coords_yx_physical = texture_coords.yx * texture_dim;
-        chunk_ref = align(texture_coords_yx_physical, _thickness);
+        chunk_ref = align(texture_coords.yx, _thickness);
     }
 
     if (_thickness.x > 0.0) {
         number x_siner = calc_siner(chunk_ref.x);
-        texture_coords_physical.x += sin(x_siner) * mag;
+        texture_coords.x += sin(x_siner) * mag;
     }
     if (_thickness.y > 0.0) {
         number y_siner = calc_siner(chunk_ref.y);
-        texture_coords_physical.y += (y_cos ? cos(y_siner) : sin(y_siner)) * mag;
+        texture_coords.y += (y_cos ? cos(y_siner) : sin(y_siner)) * mag;
     }
 
     vec2 chunk_end = chunk + _thickness;
     if (clamp_chunk_dim > 0.0) {
-        texture_coords_physical = clamp(texture_coords_physical, chunk, chunk_end);
+        texture_coords = clamp(texture_coords, chunk, chunk_end);
     } else if (clamp_chunk_dim < 0.0) {
         if (_thickness.x > 0.0) {
-            if (!in_bounds(texture_coords_physical.x, chunk.x, chunk_end.x))
+            if (!in_bounds(texture_coords.x, chunk.x, chunk_end.x))
                 discard;
         }
         if (_thickness.y > 0.0) {
-            if (!in_bounds(texture_coords_physical.y, chunk.y, chunk_end.y))
+            if (!in_bounds(texture_coords.y, chunk.y, chunk_end.y))
                 discard;
         }
     }
 
     vec2 texture_topleftmost = vec2(0.0);
     if (clamp_final_coords)
-        texture_coords_physical = clamp(texture_coords_physical, texture_topleftmost, texture_dim);
-    else if (!in_bounds(texture_coords_physical, texture_topleftmost, texture_dim))
+        texture_coords = clamp(texture_coords, texture_topleftmost, texture_dim);
+    else if (!in_bounds(texture_coords, texture_topleftmost, texture_dim))
         discard;
-    texture_coords = texture_coords_physical / texture_dim;
+    texture_coords = texture_coords / texture_dim;
 
     return Texel(texture, texture_coords) * color;
 }
