@@ -44,27 +44,21 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords_norm, vec2 screen_coo
         chunk_ref = align(texture_coords.yx, _thickness);
     }
 
-    if (_thickness.x > 0.0) {
-        number x_siner = calc_siner(chunk_ref.x);
-        texture_coords.x += sin(x_siner) * mag;
-    }
+    if (_thickness.x > 0.0)
+        texture_coords.x += sin(calc_siner(chunk_ref.x)) * mag;
     if (_thickness.y > 0.0) {
-        number y_siner = calc_siner(chunk_ref.y);
-        texture_coords.y += (y_cos ? cos(y_siner) : sin(y_siner)) * mag;
+        number siner_y = calc_siner(chunk_ref.y);
+        texture_coords.y += (y_cos ? cos(siner_y) : sin(siner_y)) * mag;
     }
 
     vec2 chunk_end = chunk + _thickness;
     if (clamp_chunk_dim > 0.0) {
         texture_coords = clamp(texture_coords, chunk, chunk_end);
     } else if (clamp_chunk_dim < 0.0) {
-        if (_thickness.x > 0.0) {
-            if (!in_bounds(texture_coords.x, chunk.x, chunk_end.x))
-                discard;
-        }
-        if (_thickness.y > 0.0) {
-            if (!in_bounds(texture_coords.y, chunk.y, chunk_end.y))
-                discard;
-        }
+        if (_thickness.x > 0.0 && !in_bounds(texture_coords.x, chunk.x, chunk_end.x))
+            discard;
+        if (_thickness.y > 0.0 && !in_bounds(texture_coords.y, chunk.y, chunk_end.y))
+            discard;
     }
 
     vec2 texture_topleftmost = vec2(0.0);
