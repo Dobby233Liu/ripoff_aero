@@ -26,7 +26,9 @@ vec2 align(vec2 a, vec2 b) {
 }
 
 number calc_siner(number diff) {
-    return broken_freq ? ((sine + diff * diff_freq) * freq) : (sine * freq + diff * diff_freq);
+    if (broken_freq)
+        return (sine + diff * diff_freq) * freq;
+    return sine * freq + diff * diff_freq;
 }
 
 vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) {
