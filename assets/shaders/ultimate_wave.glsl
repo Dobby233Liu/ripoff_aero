@@ -16,15 +16,17 @@ uniform bool ref_other_axis;
 vec2 round(vec2 v) {
     return floor(v + 0.5);
 }
+
+bool in_bounds(number x, number a, number b) {
+    return x >= a && x <= b;
+}
+
 vec2 roundize(vec2 x, vec2 y) {
     return round(x / y) * y;
 }
 
 number calc_siner(number diff) {
     return broken_freq ? ((sine + diff * diff_freq) * freq) : (sine * freq + diff * diff_freq);
-}
-bool in_bounds(number x, number a, number b) {
-    return x >= a && x <= b;
 }
 
 vec4 effect(vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords) {
