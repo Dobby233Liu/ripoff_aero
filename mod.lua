@@ -18,9 +18,9 @@ function Mod:postInit()
         sine = function() return Kristal.getTime() end,
         texture_dim = {SCREEN_WIDTH, SCREEN_HEIGHT},
         clamp_chunk_dim = 0,
-        freq = 8,
-        mag = 8,
-        thickness = {1, 0},
+        freq = 5,
+        mag = 6,
+        thickness = {0, 1},
         ref_other_axis = true
     })
     Game.world:addFX(ShaderFX("ultimate_wave", options))
