@@ -13,48 +13,58 @@ uniform bool broken_freq;
 uniform bool y_cos;
 uniform bool ref_other_axis;
 
+vec2 round(vec2 v) {
+    return floor(v + 0.5);
+}
+vec2 roundize(vec2 x, vec2 y) {
+    return round(x / y) * y;
+}
+
+number calc_siner(number diff) {
+    return broken_freq ? ((sine + diff * diff_freq) * freq) : (sine * freq + diff * diff_freq);
+}
+bool in_bounds(number x, number a, number b) {
+    return x >= a && x <= b;
+}
+
 vec4 effect(vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords) {
-    vec2 chunk = vec2(
-        thickness.x > 0.0 ? floor(texture_coords.x * texture_dim.x / thickness.x) * thickness.x : 0.0,
-        thickness.y > 0.0 ? floor(texture_coords.y * texture_dim.y / thickness.y) * thickness.y : 0.0
-    );
+    vec2 _thickness = max(vec2(0.0), thickness);
+
+    vec2 texture_coords_physical = texture_coords * texture_dim;
+    vec2 chunk = roundize(texture_coords_physical, _thickness);
     vec2 chunk_ref = chunk;
-    if (ref_other_axis)
-        chunk_ref = vec2(
-            thickness.x > 0.0 ? floor(texture_coords.y * texture_dim.y / thickness.x) * thickness.x : 0.0,
-            thickness.y > 0.0 ? floor(texture_coords.x * texture_dim.x / thickness.y) * thickness.y : 0.0
-        );
-
-    if (thickness.x > 0.0) {
-        number x_diff = chunk_ref.x;
-        number x_siner = broken_freq ? (sine + x_diff * diff_freq) * freq : sine * freq + x_diff * diff_freq;
-        texture_coords.x += sin(x_siner) * mag / texture_dim.x;
-    }
-    if (thickness.y > 0.0) {
-        number y_diff = chunk_ref.y;
-        number y_siner = broken_freq ? (sine + y_diff * diff_freq) * freq : sine * freq + y_diff * diff_freq;
-        if (y_cos)
-            texture_coords.y += cos(y_siner) * mag / texture_dim.y;
-        else
-            texture_coords.y += sin(y_siner) * mag / texture_dim.y;
+    if (ref_other_axis) {
+        vec2 texture_coords_yx_physical = texture_coords.yx * texture_dim;
+        chunk_ref = roundize(texture_coords_yx_physical, _thickness);
     }
 
+    if (_thickness.x > 0.0) {
+        number x_siner = calc_siner(chunk_ref.x);
+        texture_coords_physical.x += sin(x_siner) * mag;
+    }
+    if (_thickness.y > 0.0) {
+        number y_siner = calc_siner(chunk_ref.y);
+        texture_coords_physical.y += (y_cos ? cos(y_siner) : sin(y_siner)) * mag;
+    }
+
+    vec2 chunk_end = chunk + _thickness;
     if (clamp_chunk_dim > 0.0) {
-        if (thickness.x > 0.0)
-            texture_coords.x = clamp(texture_coords.x * texture_dim.x, chunk.x, chunk.x + thickness.x) / texture_dim.x;
-        if (thickness.y > 0.0)
-            texture_coords.y = clamp(texture_coords.y * texture_dim.y, chunk.y, chunk.y + thickness.y) / texture_dim.y;
+        texture_coords_physical = clamp(texture_coords_physical, chunk, chunk_end);
     } else if (clamp_chunk_dim < 0.0) {
-        if (
-            texture_coords.x * texture_dim.x < chunk.x || texture_coords.x * texture_dim.x > chunk.x + thickness.x
-            || texture_coords.y * texture_dim.y < chunk.y || texture_coords.y * texture_dim.y > chunk.y + thickness.y
-        )
-            discard;
+        if (_thickness.x > 0.0) {
+            if (!in_bounds(texture_coords_physical.x, chunk.x, chunk_end.x))
+                discard;
+        }
+        if (_thickness.y > 0.0) {
+            if (!in_bounds(texture_coords_physical.y, chunk.y, chunk_end.y))
+                discard;
+        }
     }
 
+    texture_coords = texture_coords_physical / texture_dim;
     if (clamp_final_coords)
         texture_coords = clamp(texture_coords, 0.0, 1.0);
-    else if (texture_coords.x < 0.0 || texture_coords.x > 1.0 || texture_coords.y < 0.0 || texture_coords.y > 1.0)
+    else if (!in_bounds(texture_coords.x, 0.0, 1.0) || !in_bounds(texture_coords.y, 0.0, 1.0))
         discard;
 
     return Texel(tex, texture_coords) * color;
