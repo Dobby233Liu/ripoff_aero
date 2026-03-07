@@ -16,7 +16,6 @@ uniform bool ref_other_axis;
 vec2 round(vec2 x) {
     return floor(x + 0.5);
 }
-
 vec2 align(vec2 a, vec2 b) {
     return round(a / b) * b;
 }
@@ -40,9 +39,8 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords_norm, vec2 screen_coo
     vec2 texture_coords = texture_coords_norm * texture_dim;
     vec2 chunk = align(texture_coords, _thickness);
     vec2 chunk_ref = chunk;
-    if (ref_other_axis) {
+    if (ref_other_axis)
         chunk_ref = align(texture_coords.yx, _thickness);
-    }
 
     if (_thickness.x > 0.0)
         texture_coords.x += sin(calc_siner(chunk_ref.x)) * mag;
