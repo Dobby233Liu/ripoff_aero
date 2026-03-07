@@ -65,6 +65,7 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords_norm, vec2 screen_coo
         texture_coords = clamp(texture_coords, texture_topleftmost, texture_dim);
     else if (!in_bounds(texture_coords, texture_topleftmost, texture_dim))
         discard;
+
     texture_coords_norm = texture_coords / texture_dim;
     return Texel(texture, texture_coords_norm) * color;
 }
