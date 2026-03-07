@@ -55,9 +55,8 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords_norm, vec2 screen_coo
     if (clamp_chunk_dim > 0.0) {
         texture_coords = clamp(texture_coords, chunk, chunk_end);
     } else if (clamp_chunk_dim < 0.0) {
-        if (_thickness.x > 0.0 && !in_bounds(texture_coords.x, chunk.x, chunk_end.x))
-            discard;
-        if (_thickness.y > 0.0 && !in_bounds(texture_coords.y, chunk.y, chunk_end.y))
+        if ((_thickness.x > 0.0 && !in_bounds(texture_coords.x, chunk.x, chunk_end.x))
+            || (_thickness.y > 0.0 && !in_bounds(texture_coords.y, chunk.y, chunk_end.y)))
             discard;
     }
 
