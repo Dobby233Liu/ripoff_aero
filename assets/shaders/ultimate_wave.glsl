@@ -17,12 +17,15 @@ vec2 round(vec2 x) {
     return floor(x + 0.5);
 }
 
+vec2 align(vec2 a, vec2 b) {
+    return round(a / b) * b;
+}
+
 bool in_bounds(number x, number a, number b) {
     return x >= a && x <= b;
 }
-
-vec2 align(vec2 a, vec2 b) {
-    return round(a / b) * b;
+bool in_bounds(vec2 x, vec2 a, vec2 b) {
+    return in_bounds(x.x, a.x, b.x) && in_bounds(x.y, a.y, b.y);
 }
 
 number calc_siner(number diff) {
@@ -65,11 +68,12 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) 
         }
     }
 
-    texture_coords = texture_coords_physical / texture_dim;
+    vec2 texture_topleftmost = vec2(0.0);
     if (clamp_final_coords)
-        texture_coords = clamp(texture_coords, 0.0, 1.0);
-    else if (!in_bounds(texture_coords.x, 0.0, 1.0) || !in_bounds(texture_coords.y, 0.0, 1.0))
+        texture_coords_physical = clamp(texture_coords_physical, texture_topleftmost, texture_dim);
+    else if (!in_bounds(texture_coords, texture_topleftmost, texture_dim))
         discard;
+    texture_coords = texture_coords_physical / texture_dim;
 
     return Texel(texture, texture_coords) * color;
 }
