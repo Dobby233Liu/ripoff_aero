@@ -49,13 +49,13 @@ vec4 effect(vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords) {
             texture_coords.x * texture_dim.x < chunk.x || texture_coords.x * texture_dim.x > chunk.x + thickness.x
             || texture_coords.y * texture_dim.y < chunk.y || texture_coords.y * texture_dim.y > chunk.y + thickness.y
         )
-            return vec4(0);
+            discard;
     }
 
     if (clamp_final_coords)
         texture_coords = clamp(texture_coords, 0.0, 1.0);
     else if (texture_coords.x < 0.0 || texture_coords.x > 1.0 || texture_coords.y < 0.0 || texture_coords.y > 1.0)
-        return vec4(0);
+        discard;
 
     return Texel(tex, texture_coords) * color;
 }
