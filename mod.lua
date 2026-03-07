@@ -3,8 +3,18 @@ function Mod:getUISkin()
 end
 
 function Mod:postInit()
-    Mod.WAVY_LAKE = modRequire("ultimate_wave")
-    --[[Game.world:addFX(ShaderFX(Mod.WAVY_LAKE, {
+    local options = {
+        freq = 1,
+        diff_freq = 1/30,
+        mag = 2,
+        thickness = {1, 0},
+        clamp_chunk_dim = 0, -- -1 = crop out, 0 = no clamping
+        clamp_final_coords = true, -- false = crop out
+        broken_freq = false,
+        y_cos = false,
+        ref_other_axis = false
+    }
+    TableUtils.merge(options, {
         sine = function() return Kristal.getTime() end,
         texture_dim = {SCREEN_WIDTH, SCREEN_HEIGHT},
         clamp_chunk_dim = 0,
@@ -12,7 +22,8 @@ function Mod:postInit()
         mag = 8,
         thickness = {1, 0},
         ref_other_axis = true
-    }))]]
+    })
+    Game.world:addFX(ShaderFX("ultimate_wave", options))
     self:addOnBattleActionEndImmediateHook()
 end
 
