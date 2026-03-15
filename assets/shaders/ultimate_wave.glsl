@@ -38,9 +38,9 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords_norm, vec2 screen_coo
     vec2 _thickness = max(vec2(0.0), thickness);
 
     vec2 texture_coords = texture_coords_norm * texture_dim;
-    vec2 chunk_base = (texture_coords_norm - diff_origin) * texture_dim;
-    vec2 chunk = align(chunk_base, _thickness);
-    vec2 chunk_ref = !ref_other_axis ? chunk : align(chunk_base.yx, _thickness);
+    vec2 chunk = align(texture_coords, _thickness);
+    vec2 chunk_ref_base = (texture_coords_norm - diff_origin) * texture_dim;
+    vec2 chunk_ref = align(!ref_other_axis ? chunk_ref_base : chunk_ref_base.yx, _thickness);
 
     if (_thickness.x > 0.0)
         texture_coords.x += sin(calc_siner(chunk_ref.x)) * mag;
