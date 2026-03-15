@@ -12,7 +12,8 @@ function Mod:postInit()
         clamp_final_coords = true, -- false = crop out
         broken_freq = false,
         y_cos = false,
-        ref_other_axis = false
+        ref_other_axis = false,
+        diff_origin = {0, 0}
     }
     TableUtils.merge(options, {
         sine = function() return Kristal.getTime() end,
@@ -20,8 +21,9 @@ function Mod:postInit()
         clamp_chunk_dim = 0,
         freq = 5,
         mag = 6,
-        thickness = {0, 1},
-        ref_other_axis = true
+        thickness = {1, 0},
+        ref_other_axis = true,
+        diff_origin = {-5, -5}
     })
     Game.world:addFX(ShaderFX("ultimate_wave", options))
     self:addOnBattleActionEndImmediateHook()
