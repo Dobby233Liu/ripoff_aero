@@ -23,7 +23,9 @@ function Mod:postInit()
         mag = 6,
         thickness = {1, 0},
         ref_other_axis = true,
-        diff_origin = {-5, -5}
+        diff_origin = function()
+            return {Kristal.getTime()/2%10, Kristal.getTime()%10}
+        end
     })
     Game.world:addFX(ShaderFX("ultimate_wave", options))
     self:addOnBattleActionEndImmediateHook()
