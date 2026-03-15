@@ -24,7 +24,7 @@ function Mod:postInit()
         thickness = {1, 0},
         ref_other_axis = true,
         diff_origin = function()
-            return {Kristal.getTime()/2%10, Kristal.getTime()%10}
+            return {MathUtils.wrap(Kristal.getTime()/2, 0, 10), MathUtils.wrap(Kristal.getTime(), 0, 10)}
         end
     })
     Game.world:addFX(ShaderFX("ultimate_wave", options))
