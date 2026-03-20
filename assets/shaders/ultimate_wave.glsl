@@ -34,19 +34,16 @@ float M_PI = 3.14159265358979323846;
 float degtorad(float degrees) {
     return degrees / 180.0 * M_PI;
 }
-float RAD_360DEG;
 */
 
 float calc_siner(float diff, float _diff_freq) {
     return /*float result =*/
         broken_freq ? (sine + diff * _diff_freq) * freq
         : sine * freq + diff * _diff_freq;
-    // return wrap(result, 0.0, RAD_360DEG);
+    // return wrap(result, 0.0, degtorad(360.0));
 }
 
 vec4 effect(vec4 color, Image texture, vec2 texture_coords_norm, vec2 screen_coords) {
-    // RAD_360DEG = degtorad(360.0);
-
     vec2 _thickness = max(vec2(0.0), thickness);
 
     vec2 texture_coords = texture_coords_norm * texture_dim;
