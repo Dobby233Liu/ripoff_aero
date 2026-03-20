@@ -1,12 +1,12 @@
-uniform number sine; // usually time, in seconds
+uniform float sine; // usually time, in seconds
 uniform vec2 texture_dim;
 
-uniform number freq;
+uniform float freq;
 uniform vec2 diff_freq;
-uniform number mag;
+uniform float mag;
 uniform vec2 thickness;
 
-uniform number clamp_chunk_dim; // -1 = crop out, 0 = no clamping
+uniform float clamp_chunk_dim; // -1 = crop out, 0 = no clamping
 uniform bool clamp_final_coords; // false = crop out
 
 uniform bool broken_freq;
@@ -18,7 +18,7 @@ vec2 align(vec2 a, vec2 b) {
     return floor((a / b) + 0.5) * b;
 }
 
-bool in_bounds(number x, number a, number b) {
+bool in_bounds(float x, float a, float b) {
     return x >= a && x <= b;
 }
 bool in_bounds(vec2 x, vec2 a, vec2 b) {
@@ -26,19 +26,19 @@ bool in_bounds(vec2 x, vec2 a, vec2 b) {
 }
 
 /*
-number wrap(number val, number min, number max) {
+float wrap(float val, float min, float max) {
     return mod(val - min, max - min) + min;
 }
 
-number M_PI = 3.14159265358979323846;
-number degtorad(number degrees) {
+float M_PI = 3.14159265358979323846;
+float degtorad(float degrees) {
     return degrees / 180.0 * M_PI;
 }
-number RAD_360DEG;
+float RAD_360DEG;
 */
 
-number calc_siner(number diff, number _diff_freq) {
-    return /*number result =*/
+float calc_siner(float diff, float _diff_freq) {
+    return /*float result =*/
         broken_freq ? (sine + diff * _diff_freq) * freq
         : sine * freq + diff * _diff_freq;
     // return wrap(result, 0.0, RAD_360DEG);
@@ -57,7 +57,7 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords_norm, vec2 screen_coo
     if (_thickness.x > 0.0)
         texture_coords.x += sin(calc_siner(chunk_ref.x, diff_freq.x)) * mag;
     if (_thickness.y > 0.0) {
-        number siner_y = calc_siner(chunk_ref.y, diff_freq.y);
+        float siner_y = calc_siner(chunk_ref.y, diff_freq.y);
         texture_coords.y += (y_cos ? cos(siner_y) : sin(siner_y)) * mag;
     }
 
