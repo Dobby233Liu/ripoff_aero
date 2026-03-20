@@ -25,13 +25,28 @@ bool in_bounds(vec2 x, vec2 a, vec2 b) {
     return in_bounds(x.x, a.x, b.x) && in_bounds(x.y, a.y, b.y);
 }
 
+/*
+number wrap(number val, number min, number max) {
+    return mod(val - min, max - min) + min;
+}
+
+number M_PI = 3.14159265358979323846;
+number degtorad(number degrees) {
+    return degrees / 180.0 * M_PI;
+}
+number RAD_360DEG;
+*/
+
 number calc_siner(number diff, number _diff_freq) {
-    if (broken_freq)
-        return (sine + diff * _diff_freq) * freq;
-    return sine * freq + diff * _diff_freq;
+    return /*number result =*/
+        broken_freq ? (sine + diff * _diff_freq) * freq
+        : sine * freq + diff * _diff_freq;
+    // return wrap(result, 0.0, RAD_360DEG);
 }
 
 vec4 effect(vec4 color, Image texture, vec2 texture_coords_norm, vec2 screen_coords) {
+    // RAD_360DEG = degtorad(360.0);
+
     vec2 _thickness = max(vec2(0.0), thickness);
 
     vec2 texture_coords = texture_coords_norm * texture_dim;
