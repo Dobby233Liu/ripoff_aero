@@ -2,7 +2,7 @@ uniform number sine; // usually time, in seconds
 uniform vec2 texture_dim;
 
 uniform number freq;
-uniform number diff_freq;
+uniform vec2 diff_freq;
 uniform number mag;
 uniform vec2 thickness;
 
@@ -28,10 +28,10 @@ bool in_bounds(vec2 x, vec2 a, vec2 b) {
     return in_bounds(x.x, a.x, b.x) && in_bounds(x.y, a.y, b.y);
 }
 
-number calc_siner(number diff) {
+number calc_siner(number diff, number _diff_freq) {
     if (broken_freq)
-        return (sine + diff * diff_freq) * freq;
-    return sine * freq + diff * diff_freq;
+        return (sine + diff * _diff_freq) * freq;
+    return sine * freq + diff * _diff_freq;
 }
 
 vec4 effect(vec4 color, Image texture, vec2 texture_coords_norm, vec2 screen_coords) {
@@ -43,9 +43,9 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords_norm, vec2 screen_coo
     vec2 chunk_ref = align(!ref_other_axis ? chunk_ref_base : chunk_ref_base.yx, _thickness);
 
     if (_thickness.x > 0.0)
-        texture_coords.x += sin(calc_siner(chunk_ref.x)) * mag;
+        texture_coords.x += sin(calc_siner(chunk_ref.x, diff_freq.x)) * mag;
     if (_thickness.y > 0.0) {
-        number siner_y = calc_siner(chunk_ref.y);
+        number siner_y = calc_siner(chunk_ref.y, diff_freq.y);
         texture_coords.y += (y_cos ? cos(siner_y) : sin(siner_y)) * mag;
     }
 

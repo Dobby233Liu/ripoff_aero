@@ -5,15 +5,14 @@ end
 function Mod:postInit()
     local options = {
         freq = 1,
-        diff_freq = 1/30,
+        diff_freq = {1/30, 1/30},
         mag = 2,
         thickness = {1, 0},
         clamp_chunk_dim = 0, -- -1 = crop out, 0 = no clamping
         clamp_final_coords = true, -- false = crop out
         broken_freq = false,
         y_cos = false,
-        ref_other_axis = false,
-        diff_origin = {0, 0}
+        ref_other_axis = false
     }
     TableUtils.merge(options, {
         sine = function() return Kristal.getTime() end,
@@ -22,10 +21,7 @@ function Mod:postInit()
         freq = 5,
         mag = 6,
         thickness = {1, 0},
-        ref_other_axis = true,
-        diff_origin = function()
-            return {MathUtils.wrap(Kristal.getTime()/2, 0, 10), MathUtils.wrap(Kristal.getTime(), 0, 10)}
-        end
+        ref_other_axis = true
     })
     Game.world:addFX(ShaderFX("ultimate_wave", options))
     self:addOnBattleActionEndImmediateHook()
