@@ -14,11 +14,8 @@ uniform bool y_cos;
 uniform bool ref_other_axis;
 uniform vec2 diff_origin;
 
-vec2 round(vec2 x) {
-    return floor(x + 0.5);
-}
 vec2 align(vec2 a, vec2 b) {
-    return round(a / b) * b;
+    return floor((a / b) + 0.5) * b;
 }
 
 bool in_bounds(number x, number a, number b) {
