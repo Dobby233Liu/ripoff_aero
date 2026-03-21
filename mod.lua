@@ -126,6 +126,7 @@ end
 -- do something like this somewhere
 function Mod:addOnBattleActionEndImmediateHook()
     HookSystem.hook(Battle, "finishAction", function(orig, self, action, ...)
+        action = action or self.current_actions[self.current_action_index]
         local ret = orig(self, action, ...)
         Kristal.callEvent("onBattleActionEndImmediate", action, action.action, self.party[action.character_id], action.target)
         return ret
