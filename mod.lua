@@ -15,13 +15,16 @@ function Mod:postInit()
         ref_other_axis = false,
         align_ref_chunk = true
     }
+    local function align(a, f)
+        return math.ceil(a / f) * f
+    end
     TableUtils.merge(options, {
-        sine = function() return Kristal.getTime() end,
+        sine = function() return align(Kristal.getTime(), 1/10) end,
         texture_dim = {SCREEN_WIDTH, SCREEN_HEIGHT},
         clamp_chunk_dim = 0,
         freq = {8, 10},
-        mag = {4, 1},
-        thickness = {2, 4},
+        mag = {4, 2},
+        thickness = {4, 4},
         diff_freq = {-2, 2},
         ref_other_axis = true,
         align_ref_chunk = true

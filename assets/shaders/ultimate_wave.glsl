@@ -37,9 +37,9 @@ float degtorad(float degrees) {
 */
 
 float calc_siner(float _freq, float diff, float _diff_freq) {
+    float diff_sine = diff * _diff_freq;
     return /*float result =*/
-        broken_freq ? (sine + diff * _diff_freq) * _freq
-        : sine * _freq + diff * _diff_freq;
+        broken_freq ? (sine + diff_sine) * _freq : sine * _freq + diff_sine;
     // return wrap(result, 0.0, degtorad(360.0));
 }
 
