@@ -120,6 +120,7 @@ function ScreenChannelChangeFX:draw(texture)
     if not self.infinite and self.timer > 0 then
         self.timer = MathUtils.approach(self.timer, 0, DTMULT)
         if self.timer == 0 then
+            self.old_screen_surf = nil
             self.on_stop(self)
         end
     end
