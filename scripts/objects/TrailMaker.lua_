@@ -1,0 +1,52 @@
+---@class TrailMaker : Object
+---@overload fun() : TrailMaker
+local TrailMaker, super = Class(Object)
+
+function TrailMaker:init()
+    super.init(self)
+
+    self.path = GMPath({
+        type = GMPath.TYPE_CURVED,
+        closed = false,
+        precision = 8
+    })
+    self.dist = {-8, -8}
+end
+
+function TrailMaker:onAdd(...)
+    super.onAdd(self, ...)
+
+    self.path:clear()
+end
+
+function TrailMaker:applyTransformTo(transform)
+    if self.parent then
+        transform:reset()
+    end
+    super.applyTransformTo(self, transform)
+end
+
+---@param facing FacingDirection
+---@return integer
+function TrailMaker:angleFromFacing(facing)
+    if facing == "right" then
+        return 0
+    elseif facing == "down" then
+        return 90
+    elseif facing == "left" then
+        return 180
+    elseif facing == "up" then
+        return 270
+    end
+    return 0
+end
+
+function TrailMaker:lengthDirX(length, dir)
+    return math.cos(dir) * length
+end
+
+function TrailMaker:lengthDirY(length, dir)
+    return math.sin(dir) * length
+end
+
+return TrailMaker

@@ -29,7 +29,7 @@ function Mod:postInit()
         ref_other_axis = true,
         align_ref_chunk = true
     })
-    Game.stage:addFX(ShaderFX("ultimate_wave", options))
+    --Game.stage:addFX(ShaderFX("ultimate_wave", options))
     self:addOnBattleActionEndImmediateHook()
 end
 
