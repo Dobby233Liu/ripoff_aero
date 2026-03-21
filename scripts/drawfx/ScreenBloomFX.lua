@@ -1,6 +1,6 @@
 -- Port of `obj_fx_screenbloom` from Chapter 4
 ---@class ScreenBloomFX : FXBase
----@overload fun(self: ScreenBloomFX, priority: number): ScreenBloomFX
+---@overload fun(priority: number): ScreenBloomFX
 local ScreenBloomFX, super = Class("FXBase")
 
 function ScreenBloomFX:init(priority)
