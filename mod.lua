@@ -21,10 +21,10 @@ function Mod:postInit()
         clamp_chunk_dim = 0,
         freq = {8, 10},
         mag = {4, 1},
-        thickness = {1, 1},
+        thickness = {2, 4},
         diff_freq = {-2, 2},
         ref_other_axis = true,
-        align_ref_chunk = false
+        align_ref_chunk = true
     })
     Game.stage:addFX(ShaderFX("ultimate_wave", options))
     self:addOnBattleActionEndImmediateHook()
