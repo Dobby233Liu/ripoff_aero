@@ -1,9 +1,9 @@
 uniform float sine; // usually time, in seconds
 uniform vec2 texture_dim;
 
-uniform float freq;
+uniform vec2 freq;
 uniform vec2 diff_freq;
-uniform float mag;
+uniform vec2 mag;
 uniform vec2 thickness;
 
 uniform float clamp_chunk_dim; // -1 = crop out, 0 = no clamping
@@ -12,10 +12,10 @@ uniform bool clamp_final_coords; // false = crop out
 uniform bool broken_freq;
 uniform bool y_cos;
 uniform bool ref_other_axis;
-uniform vec2 diff_origin;
+uniform bool align_ref_chunk;
 
 vec2 align(vec2 a, vec2 b) {
-    return floor((a / b) + 0.5) * b;
+    return ceil(a / b) * b;
 }
 
 bool in_bounds(float x, float a, float b) {
@@ -36,10 +36,10 @@ float degtorad(float degrees) {
 }
 */
 
-float calc_siner(float diff, float _diff_freq) {
+float calc_siner(float _freq, float diff, float _diff_freq) {
     return /*float result =*/
-        broken_freq ? (sine + diff * _diff_freq) * freq
-        : sine * freq + diff * _diff_freq;
+        broken_freq ? (sine + diff * _diff_freq) * _freq
+        : sine * _freq + diff * _diff_freq;
     // return wrap(result, 0.0, degtorad(360.0));
 }
 
@@ -48,14 +48,15 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords_norm, vec2 screen_coo
 
     vec2 texture_coords = texture_coords_norm * texture_dim;
     vec2 chunk = align(texture_coords, _thickness);
-    vec2 chunk_ref_base = (texture_coords_norm - diff_origin) * texture_dim;
-    vec2 chunk_ref = align(!ref_other_axis ? chunk_ref_base : chunk_ref_base.yx, _thickness);
 
+    vec2 chunk_ref = !ref_other_axis ? texture_coords : texture_coords.yx;
+    if (align_ref_chunk)
+        chunk_ref = align(chunk_ref, _thickness);
     if (_thickness.x > 0.0)
-        texture_coords.x += sin(calc_siner(chunk_ref.x, diff_freq.x)) * mag;
+        texture_coords.x += sin(calc_siner(freq.x, chunk_ref.x, diff_freq.x)) * mag.x;
     if (_thickness.y > 0.0) {
-        float siner_y = calc_siner(chunk_ref.y, diff_freq.y);
-        texture_coords.y += (y_cos ? cos(siner_y) : sin(siner_y)) * mag;
+        float siner_y = calc_siner(freq.y, chunk_ref.y, diff_freq.y);
+        texture_coords.y += (y_cos ? cos(siner_y) : sin(siner_y)) * mag.y;
     }
 
     vec2 chunk_end = chunk + _thickness;

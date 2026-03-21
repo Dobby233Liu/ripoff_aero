@@ -4,26 +4,29 @@ end
 
 function Mod:postInit()
     local options = {
-        freq = 1,
+        freq = {1, 1},
         diff_freq = {1/30, 1/30},
-        mag = 2,
+        mag = {2, 2},
         thickness = {1, 0},
         clamp_chunk_dim = 0, -- -1 = crop out, 0 = no clamping
         clamp_final_coords = true, -- false = crop out
         broken_freq = false,
         y_cos = false,
-        ref_other_axis = false
+        ref_other_axis = false,
+        align_ref_chunk = true
     }
     TableUtils.merge(options, {
         sine = function() return Kristal.getTime() end,
         texture_dim = {SCREEN_WIDTH, SCREEN_HEIGHT},
         clamp_chunk_dim = 0,
-        freq = 5,
-        mag = 6,
-        thickness = {1, 0},
-        ref_other_axis = true
+        freq = {8, 10},
+        mag = {4, 1},
+        thickness = {1, 1},
+        diff_freq = {-2, 2},
+        ref_other_axis = true,
+        align_ref_chunk = false
     })
-    Game.world:addFX(ShaderFX("ultimate_wave", options))
+    Game.stage:addFX(ShaderFX("ultimate_wave", options))
     self:addOnBattleActionEndImmediateHook()
 end
 
@@ -135,5 +138,15 @@ end
 function Mod:onBattleActionEndImmediate(action, action_name, battler, target)
     if (action_name == "ATTACK" or action_name == "AUTOATTACK") and target.onAttackEnd then
         target:onAttackEnd(battler, action)
+    end
+end
+
+---@param menu DarkMenu
+function Mod:onDarkMenuOpen(menu)
+    do local self = menu
+        self.box = DarkItemMenu()
+        self.box.layer = 1
+        self:addChild(self.box)
+        self.state = "ITEMMENU"
     end
 end
