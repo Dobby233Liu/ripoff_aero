@@ -24,6 +24,7 @@ function ScreenChannelChangeFX:init(priority)
     self.scan_x_init = false
 
     self.shuffle = true
+    self.scan_x_shuffle_init = false
     self.infinite = false
 
     self.old_screen_surf = nil
@@ -33,7 +34,7 @@ function ScreenChannelChangeFX:init(priority)
     self.channel_shader = Assets.getShader("channel_change_sprite")
     self.perlin_texture_page = Assets.getTexture("effects/perlin_noise_240")
     self.channel_shader:send("perlin_texture_page", self.perlin_texture_page)
-    self.channel_shader:send("u_pixelSize", {self.perlin_texture_page:getDimensions()})
+    self.channel_shader:send("u_pixelSize", { self.perlin_texture_page:getDimensions() })
 
     -- Tenna battle specifics
     self.lightemupcon = -1
@@ -51,7 +52,7 @@ function ScreenChannelChangeFX:start(strength, lifetime)
     self.lifetime = lifetime or self.lifetime
     self.timer = self.lifetime
 
-    self.scan_x_init = false
+    self.scan_x_shuffle_init = false
     self.old_screen_surf = nil
 
     self.on_start(self)
@@ -99,15 +100,18 @@ function ScreenChannelChangeFX:draw(texture)
         local _variation_neg = _variation * -self.scroll_dir
         self.scan_x = MathUtils.random(_variation + _variation_neg, _scroll + _variation_neg)
 
+        self.scan_x_init = true
+    end
+    if not self.scan_x_shuffle_init then
         if self.shuffle then
             local _spot = MathUtils.randomInt(self.scan_x_brd, tex_h - self.scan_x_brd + 1)
             self.scan_x = MathUtils.wrap(self.scan_x + _spot, 0, tex_h - 1)
         end
 
-        self.scan_x_init = true
+        self.scan_x_shuffle_init = true
     end
 
-    self.channel_shader:send("texel", {tex_w, tex_h})
+    self.channel_shader:send("texel", { tex_w, tex_h })
     self.channel_shader:send("strength", _strength)
     self.channel_shader:send("scanx", math.floor(self.scan_x) + 0.5)
     love.graphics.setShader(self.channel_shader)
