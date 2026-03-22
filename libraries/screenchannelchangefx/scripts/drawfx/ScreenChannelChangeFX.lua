@@ -62,6 +62,33 @@ function ScreenChannelChangeFX:getFrame(frames, frame)
     return frames[1 + (math.floor(frame) % #frames)]
 end
 
+-- Vile but required for accuracy
+function ScreenChannelChangeFX:wrap(_val, _min, _max)
+    local _range_a = _max - _min
+    local _range_b = _min - _max
+    if _val % 1 == 0 then
+        while _val < _min or _val > _max do
+            if _val < _min then
+                _val = _val + _range_a + 1
+            elseif _val > _max then
+                _val = _val + _range_b - 1
+            end
+        end
+    else
+        local _old = _val + 1
+        while _val ~= _old do
+            _old = _val
+            if _val < _min then
+                _val = _val + _range_a
+            elseif _val > _max then
+                _val = _val + _range_b
+            end
+        end
+    end
+
+    return _val
+end
+
 ---@param texture love.Canvas
 function ScreenChannelChangeFX:draw(texture)
     if (not self.infinite and self.timer <= 0) or self.strength == 0 then
@@ -85,7 +112,7 @@ function ScreenChannelChangeFX:draw(texture)
     local screen_surf = Draw.pushCanvas(tex_w, tex_h)
     if self.scroll then
         -- scr_ease_out(1 - (self.timer / self.lifetime), 4)
-        local _yy = MathUtils.wrap(Utils.ease(0, 1, 1 - (self.timer / self.lifetime), "out-quart"), 0, 1) * tex_h
+        local _yy = self:wrap(Utils.ease(0, 1, 1 - (self.timer / self.lifetime), "out-quart"), 0, 1) * tex_h
         ---@diagnostic disable-next-line: param-type-mismatch
         Draw.drawCanvasPart(self.old_screen_surf, 0, 0, 0, _yy, tex_w, tex_h - _yy)
         Draw.drawCanvasPart(texture, 0, tex_h - _yy, 0, 0, tex_w, _yy)
@@ -104,7 +131,7 @@ function ScreenChannelChangeFX:draw(texture)
     end
     if self.shuffle and not self.scan_x_shuffle_init then
         local _spot = MathUtils.randomInt(self.scan_x_brd, tex_h - self.scan_x_brd + 1)
-        self.scan_x = MathUtils.wrap(self.scan_x + _spot, 0, tex_h - 1)
+        self.scan_x = self:wrap(self.scan_x + _spot, 0, tex_h - 1)
 
         self.scan_x_shuffle_init = true
     end
@@ -117,7 +144,7 @@ function ScreenChannelChangeFX:draw(texture)
     love.graphics.setShader()
 
     local scan_x_inc = self.scroll_speed * self.scroll_dir * (self.timer / self.lifetime) * 2 * DTMULT
-    self.scan_x = MathUtils.wrap(self.scan_x + scan_x_inc, 0, tex_h - 1)
+    self.scan_x = self:wrap(self.scan_x + scan_x_inc, 0, tex_h - 1)
 
     if not self.infinite and self.timer > 0 then
         self.timer = MathUtils.approach(self.timer, 0, DTMULT)
@@ -128,6 +155,21 @@ function ScreenChannelChangeFX:draw(texture)
     end
 
     local _alpha = _ease / 2
+    local _alpha_alt = self:lightemupExtraDraw()
+    if _alpha_alt ~= nil then _alpha = _alpha_alt end
+
+    Draw.setColor(1, 1, 1, _alpha)
+    local static_x, static_y = 0, 0 -- -camerax, -cameray in DR due to an oversight
+    if self.infinite then
+        Draw.drawWrapped(self:getFrame(self.static_effect, self.scan_x), true, true, static_x, static_y, 0, 2, 2)
+    else
+        Draw.drawWrapped(self:getFrame(self.static_effect, self.timer / 2), true, true, static_x, static_y, 0, 2, 2)
+    end
+    Draw.setColor(COLORS.white)
+end
+
+function ScreenChannelChangeFX:lightemupExtraDraw()
+    local _alpha
 
     if self.lightemupcon >= 0 then
         if self.lightemupcon == 1 then
@@ -168,14 +210,7 @@ function ScreenChannelChangeFX:draw(texture)
         end
     end
 
-    Draw.setColor(1, 1, 1, _alpha)
-    local static_x, static_y = 0, 0 -- -camerax, -cameray in DR due to an oversight
-    if self.infinite then
-        Draw.drawWrapped(self:getFrame(self.static_effect, self.scan_x), true, true, static_x, static_y, 0, 2, 2)
-    else
-        Draw.drawWrapped(self:getFrame(self.static_effect, self.timer / 2), true, true, static_x, static_y, 0, 2, 2)
-    end
-    Draw.setColor(COLORS.white)
+    return _alpha
 end
 
 return ScreenChannelChangeFX
