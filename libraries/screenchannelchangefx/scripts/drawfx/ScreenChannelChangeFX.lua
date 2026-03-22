@@ -64,14 +64,14 @@ end
 
 -- Vile but required for accuracy
 function ScreenChannelChangeFX:wrap(_val, _min, _max)
-    local _range_a = _max - _min
-    local _range_b = _min - _max
+    local _diff_m = _max - _min
+    local _diff_i = _min - _max
     if _val % 1 == 0 then
         while _val < _min or _val > _max do
             if _val < _min then
-                _val = _val + _range_a + 1
+                _val = _val + _diff_m + 1
             elseif _val > _max then
-                _val = _val + _range_b - 1
+                _val = _val + _diff_i - 1
             end
         end
     else
@@ -79,9 +79,9 @@ function ScreenChannelChangeFX:wrap(_val, _min, _max)
         while _val ~= _old do
             _old = _val
             if _val < _min then
-                _val = _val + _range_a
+                _val = _val + _diff_m
             elseif _val > _max then
-                _val = _val + _range_b
+                _val = _val + _diff_i
             end
         end
     end
