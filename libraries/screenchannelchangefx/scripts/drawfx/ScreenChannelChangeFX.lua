@@ -155,7 +155,7 @@ function ScreenChannelChangeFX:draw(texture)
     end
 
     local _alpha = _ease / 2
-    local _alpha_alt = self:lightemupExtraDraw()
+    local _alpha_alt = self:lightemupExtraDraw(_ease)
     if _alpha_alt ~= nil then _alpha = _alpha_alt end
 
     Draw.setColor(1, 1, 1, _alpha)
@@ -168,7 +168,7 @@ function ScreenChannelChangeFX:draw(texture)
     Draw.setColor(COLORS.white)
 end
 
-function ScreenChannelChangeFX:lightemupExtraDraw()
+function ScreenChannelChangeFX:lightemupExtraDraw(_ease)
     local _alpha
 
     if self.lightemupcon >= 0 then
