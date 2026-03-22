@@ -102,11 +102,9 @@ function ScreenChannelChangeFX:draw(texture)
 
         self.scan_x_init = true
     end
-    if not self.scan_x_shuffle_init then
-        if self.shuffle then
-            local _spot = MathUtils.randomInt(self.scan_x_brd, tex_h - self.scan_x_brd + 1)
-            self.scan_x = MathUtils.wrap(self.scan_x + _spot, 0, tex_h - 1)
-        end
+    if self.shuffle and not self.scan_x_shuffle_init then
+        local _spot = MathUtils.randomInt(self.scan_x_brd, tex_h - self.scan_x_brd + 1)
+        self.scan_x = MathUtils.wrap(self.scan_x + _spot, 0, tex_h - 1)
 
         self.scan_x_shuffle_init = true
     end
