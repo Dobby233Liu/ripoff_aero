@@ -16,7 +16,7 @@ function ScreenChannelChangeFX:init(priority)
 
     self.scroll = false
     self.scroll_speed = 5
-    self.scroll_dir = MathUtils.randomInt(2) * 2 - 1
+    self.scroll_dir = MathUtils.randomInt(1 + 1) * 2 - 1
 
     self.scan_x = 0
     -- In pixels
