@@ -89,6 +89,11 @@ function ScreenChannelChangeFX:draw(texture)
         return super.draw(self, texture)
     end
 
+    if self.scroll and not self.old_screen_surf then
+        captureOldSurf()
+        if self.always_prepare_old_surf then return end
+    end
+
     local tex_w, tex_h = texture:getDimensions()
 
     -- scr_ease_in(self.timer / self.lifetime, 2)
@@ -96,11 +101,6 @@ function ScreenChannelChangeFX:draw(texture)
     local _strength = self.strength * _ease
     if self.scroll then
         _strength = _strength / 3
-    end
-
-    if self.scroll and not self.old_screen_surf then
-        captureOldSurf()
-        if self.always_prepare_old_surf then return end
     end
 
     local screen_surf = Draw.pushCanvas(tex_w, tex_h)
