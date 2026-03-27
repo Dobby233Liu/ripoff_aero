@@ -5,6 +5,7 @@ local ScreenChannelChangeFXTester, super = Class(Object)
 function ScreenChannelChangeFXTester:init()
     super.init(self, 0, 0)
 
+    ---@type ScreenChannelChangeFX?
     self.fx = nil
     self.background = 0
 end
@@ -54,6 +55,19 @@ function ScreenChannelChangeFXTester:update()
         end
 
         if Input.pressed("b") then
+            self.fx.lightemupcon = -1
+            self.fx:start()
+        end
+
+        if Input.pressed("m") then
+            if Input.shift() then
+                self.fx.lightemupcon = 0
+                self.fx.lifetime = math.max(15, self.fx.lifetime)
+            else
+                self.fx.lightemupcon = 1
+                self.fx.lifetime = 70
+            end
+            self.fx.lightemuptimer = 0
             self.fx:start()
         end
 

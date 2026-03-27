@@ -161,44 +161,44 @@ function ScreenChannelChangeFX:lightemupInit()
 end
 
 function ScreenChannelChangeFX:lightemupExtraDraw(_ease)
-    local _alpha
+    if self.lightemupcon < 0 then return end
 
-    if self.lightemupcon >= 0 then
-        if self.lightemupcon == 1 then
-            self.lightemuptimer = MathUtils.approach(self.lightemuptimer, 70, DTMULT)
+    local _alpha = nil
 
-            if self.lightemuptimer >= 3 and not self.lightemup_sound_tr1 then
-                self.lightemup_sound_tr1 = true
-                Assets.playSound("tv_static")
-            end
-            if self.lightemuptimer >= 65 and not self.lightemup_sound_tr2 then
-                self.lightemup_sound_tr2 = true
-                Assets.stopSound("tv_static")
-            end
+    if self.lightemupcon == 1 then
+        self.lightemuptimer = MathUtils.approach(self.lightemuptimer, 70, DTMULT)
 
-            local _alpha2 = 1
-            if self.lightemuptimer < 3 then
-                _alpha2 = Utils.ease(0, 1, self.lightemuptimer / 3, "linear")
-            elseif self.lightemuptimer >= 3 and self.lightemuptimer < 60 then
-                _alpha2 = 1
-            elseif self.lightemuptimer >= 60 then
-                _alpha2 = Utils.ease(1, 0, (self.lightemuptimer - 60) / 10, "linear")
-            end
+        if self.lightemuptimer >= 3 and not self.lightemup_sound_tr1 then
+            self.lightemup_sound_tr1 = true
+            Assets.playSound("tv_static")
+        end
+        if self.lightemuptimer >= 65 and not self.lightemup_sound_tr2 then
+            self.lightemup_sound_tr2 = true
+            Assets.stopSound("tv_static")
+        end
 
-            if self.lightemuptimer == 70 then
-                self.lightemupcon = 0
-                self.lightemup_sound_tr1 = false
-                self.lightemup_sound_tr2 = false
-                self.lifetime = self.base_lifetime
-            end
+        local _alpha2 = 1
+        if self.lightemuptimer < 3 then
+            _alpha2 = Utils.ease(0, 1, self.lightemuptimer / 3, "linear")
+        elseif self.lightemuptimer >= 3 and self.lightemuptimer < 60 then
+            _alpha2 = 1
+        elseif self.lightemuptimer >= 60 then
+            _alpha2 = Utils.ease(1, 0, (self.lightemuptimer - 60) / 10, "linear")
+        end
 
-            Draw.setColor(1, 1, 1, _alpha2)
-            Draw.drawWrapped(self:getFrame(self.static_effect, self.timer), true, true, 0, 0, 0, 2, 2)
-        else
-            _alpha = _ease / 3
-            if self.changechanneltimermax < 25 then
-                _alpha = Utils.ease(0, _ease / 3, self.strength / self.base_strength, "linear")
-            end
+        if self.lightemuptimer == 70 then
+            self.lightemupcon = 0
+            self.lightemup_sound_tr1 = false
+            self.lightemup_sound_tr2 = false
+            self.lifetime = self.base_lifetime
+        end
+
+        Draw.setColor(1, 1, 1, _alpha2)
+        Draw.drawWrapped(self:getFrame(self.static_effect, self.timer), true, true, 0, 0, 0, 2, 2)
+    else
+        _alpha = _ease / 3
+        if self.changechanneltimermax < 25 then
+            _alpha = Utils.ease(0, _ease / 3, self.strength / self.base_strength, "linear")
         end
     end
 
