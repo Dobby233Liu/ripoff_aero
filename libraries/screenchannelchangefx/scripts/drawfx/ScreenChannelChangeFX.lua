@@ -68,7 +68,7 @@ function ScreenChannelChangeFX:wrap(_val, _min, _max)
     -- Original DR code is max-exclusive if val is not an integer for whatever reason,
     -- so we follow suit
 
-    return _small + (_val - _small) % _diff
+    return _small + (_val - _small + _diff) % _diff
 end
 
 ---@param texture love.Canvas
