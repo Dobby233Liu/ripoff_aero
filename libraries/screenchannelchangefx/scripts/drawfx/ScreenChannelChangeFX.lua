@@ -14,9 +14,10 @@ function ScreenChannelChangeFX:init(priority)
 
     self.timer = 0
 
+    -- Set scan_x_init to false after you change these at runtime
     self.scroll = false
     self.scroll_speed = 5
-    self.scroll_dir = MathUtils.randomInt(1 + 1) * 2 - 1
+    self.scroll_dir = self:randomSign()
 
     self.scan_x = 0
     -- In pixels
@@ -28,7 +29,7 @@ function ScreenChannelChangeFX:init(priority)
     self.infinite = false
 
     self.old_screen_surf = nil
-    self.wait_for_old_surf_to_be_prepared = false
+    self.always_prepare_old_surf = false
 
     self.static_effect = Assets.getFrames("effects/static_effect")
     self.channel_shader = Assets.getShader("channel_change_sprite")
@@ -42,19 +43,8 @@ function ScreenChannelChangeFX:init(priority)
     self:lightemupInit()
 end
 
-function ScreenChannelChangeFX:start(strength, lifetime)
-    self.strength = strength or self.strength
-    self.lifetime = lifetime or self.lifetime
-    self.timer = self.lifetime
-
-    self.scan_x_shuffle_init = false
-    self.old_screen_surf = nil
-
-    self.on_start(self)
-end
-
-function ScreenChannelChangeFX:getFrame(frames, frame)
-    return frames[1 + (math.floor(frame) % #frames)]
+function ScreenChannelChangeFX:randomSign()
+    return MathUtils.randomInt(1 + 1) * 2 - 1
 end
 
 function ScreenChannelChangeFX:wrap(_val, _min, _max)
@@ -71,18 +61,35 @@ function ScreenChannelChangeFX:wrap(_val, _min, _max)
     return _small + ((_val - _small) + _diff) % _diff
 end
 
+function ScreenChannelChangeFX:getFrame(frames, frame)
+    return frames[1 + (math.floor(frame) % #frames)]
+end
+
+function ScreenChannelChangeFX:start(strength, lifetime)
+    self.strength = strength or self.strength
+    self.lifetime = lifetime or self.lifetime
+    self.timer = self.lifetime
+
+    self.scan_x_shuffle_init = false
+    self.old_screen_surf = nil
+
+    self.on_start(self)
+end
+
 ---@param texture love.Canvas
 function ScreenChannelChangeFX:draw(texture)
+    local function captureOldSurf()
+        self.old_screen_surf = love.graphics.newImage(texture:newImageData())
+    end
+
     if (not self.infinite and self.timer <= 0) or self.strength == 0 then
+        if self.scroll and self.always_prepare_old_surf then
+            captureOldSurf()
+        end
         return super.draw(self, texture)
     end
 
     local tex_w, tex_h = texture:getDimensions()
-
-    if self.scroll and not self.old_screen_surf then
-        self.old_screen_surf = love.graphics.newImage(texture:newImageData())
-        if self.wait_for_old_surf_to_be_prepared then return end
-    end
 
     -- scr_ease_in(self.timer / self.lifetime, 2)
     local _ease = Utils.ease(0, 1, self.timer / self.lifetime, "in-quad")
@@ -91,10 +98,15 @@ function ScreenChannelChangeFX:draw(texture)
         _strength = _strength / 3
     end
 
+    if self.scroll and not self.old_screen_surf then
+        captureOldSurf()
+        if self.always_prepare_old_surf then return end
+    end
+
     local screen_surf = Draw.pushCanvas(tex_w, tex_h)
     if self.scroll then
         -- scr_ease_out(1 - (self.timer / self.lifetime), 4)
-        local _yy = self:wrap(Utils.ease(0, 1, 1 - (self.timer / self.lifetime), "out-quart"), 0, 1) * tex_h
+        local _yy = tex_h * self:wrap(Utils.ease(0, 1, 1 - (self.timer / self.lifetime), "out-quart"), 0, 1)
         ---@diagnostic disable-next-line: param-type-mismatch
         Draw.drawCanvasPart(self.old_screen_surf, 0, 0, 0, _yy, tex_w, tex_h - _yy)
         Draw.drawCanvasPart(texture, 0, tex_h - _yy, 0, 0, tex_w, _yy)
@@ -131,7 +143,9 @@ function ScreenChannelChangeFX:draw(texture)
     if not self.infinite and self.timer > 0 then
         self.timer = MathUtils.approach(self.timer, 0, DTMULT)
         if self.timer == 0 then
-            self.old_screen_surf = nil
+            if not self.always_prepare_old_surf then
+                self.old_screen_surf = nil
+            end
             self.on_stop(self)
         end
     end
