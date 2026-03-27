@@ -107,6 +107,7 @@ function ScreenChannelChangeFX:draw(texture)
     if self.scroll then
         -- scr_ease_out(1 - (self.timer / self.lifetime), 4)
         local _yy = tex_h * self:wrap(Utils.ease(0, 1, 1 - (self.timer / self.lifetime), "out-quart"), 0, 1)
+        --- using drawCanvasPart for premultiplied alpha
         ---@diagnostic disable-next-line: param-type-mismatch
         Draw.drawCanvasPart(self.old_screen_surf, 0, 0, 0, _yy, tex_w, tex_h - _yy)
         Draw.drawCanvasPart(texture, 0, tex_h - _yy, 0, 0, tex_w, _yy)
