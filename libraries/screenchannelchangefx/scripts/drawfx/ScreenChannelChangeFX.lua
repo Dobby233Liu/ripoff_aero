@@ -36,15 +36,10 @@ function ScreenChannelChangeFX:init(priority)
     self.channel_shader:send("perlin_texture_page", self.perlin_texture_page)
     self.channel_shader:send("u_pixelSize", { self.perlin_texture_page:getDimensions() })
 
-    -- Tenna battle specifics
-    self.lightemupcon = -1
-    self.lightemuptimer = 0
-    self.lightemup_sound_tr1 = false
-    self.lightemup_sound_tr2 = false
-    self.changechanneltimermax = 25
-
     self.on_start = function(self) end
     self.on_stop = function(self) end
+
+    self:lightemupInit()
 end
 
 function ScreenChannelChangeFX:start(strength, lifetime)
@@ -62,31 +57,18 @@ function ScreenChannelChangeFX:getFrame(frames, frame)
     return frames[1 + (math.floor(frame) % #frames)]
 end
 
--- Vile but required for accuracy
 function ScreenChannelChangeFX:wrap(_val, _min, _max)
-    local _diff_m = _max - _min
-    local _diff_i = _min - _max
-    if _val % 1 == 0 then
-        while _val < _min or _val > _max do
-            if _val < _min then
-                _val = _val + _diff_m + 1
-            elseif _val > _max then
-                _val = _val + _diff_i - 1
-            end
-        end
-    else
-        local _old = _val + 1
-        while _val ~= _old do
-            _old = _val
-            if _val < _min then
-                _val = _val + _diff_m
-            elseif _val > _max then
-                _val = _val + _diff_i
-            end
-        end
-    end
+    local _small, _large = math.min(_min, _max), math.max(_min, _max)
 
-    return _val
+    local _diff = _large - _small
+    if _val % 1 == 0 then
+        -- Max-inclusive
+        _diff = _diff + 1
+    end
+    -- Original DR code is max-exclusive if val is not an integer for whatever reason,
+    -- so we follow suit
+
+    return _small + (_val - _small) % _diff
 end
 
 ---@param texture love.Canvas
@@ -166,6 +148,16 @@ function ScreenChannelChangeFX:draw(texture)
         Draw.drawWrapped(self:getFrame(self.static_effect, self.timer / 2), true, true, static_x, static_y, 0, 2, 2)
     end
     Draw.setColor(COLORS.white)
+end
+
+-- Tenna battle-specific
+
+function ScreenChannelChangeFX:lightemupInit()
+    self.lightemupcon = -1
+    self.lightemuptimer = 0
+    self.lightemup_sound_tr1 = false
+    self.lightemup_sound_tr2 = false
+    self.changechanneltimermax = 25
 end
 
 function ScreenChannelChangeFX:lightemupExtraDraw(_ease)
